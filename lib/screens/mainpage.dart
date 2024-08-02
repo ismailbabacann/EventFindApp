@@ -47,15 +47,15 @@ class _MainpageState extends State<Mainpage> {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.account_balance_outlined),
+              icon: const Icon(Icons.menu, color: Colors.white),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
             );
           },
         ),
-        title: const Center(child: Text("NeYakın!")),
-        backgroundColor: Colors.transparent,
+        title: const Center(child: Text("NeYakın!", style: TextStyle(color: Colors.white))),
+        backgroundColor: Colors.deepPurpleAccent,
       ),
       drawer: Drawer(
         child: ListView(
@@ -63,10 +63,10 @@ class _MainpageState extends State<Mainpage> {
           children: <Widget>[
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: Colors.deepPurpleAccent,
               ),
               child: Text(
-                'Deneme',
+                'İsmail Babacan',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -101,14 +101,15 @@ class _MainpageState extends State<Mainpage> {
         future: _events,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No events found'));
+            return const Center(child: Text('No events found'));
           } else {
             var events = snapshot.data!;
             List<Marker> markers = [];
+            List<Polyline> polylines = [];
 
             for (var event in events) {
               try {
@@ -127,9 +128,9 @@ class _MainpageState extends State<Mainpage> {
                       ),
                       builder: (ctx) => Container(
                         child: IconButton(
-                          icon: const Icon(Icons.location_on),
-                          color: Colors.red,
-                          iconSize: 40.0,
+                          icon: const Icon(Icons.location_on_outlined),
+                          color: Colors.deepPurpleAccent,
+                          iconSize: 50.0,
                           onPressed: () {
                             showDialog(
                               context: ctx,
@@ -158,13 +159,35 @@ class _MainpageState extends State<Mainpage> {
                 print('Error processing event: $e'); // Hata ayıklama
               }
             }
+
+            // Antalya il sınırları için Polyline ekleme
+            polylines.add(
+              Polyline(
+                points: [
+                  LatLng(36.82757500737217, 31.20382563379399),
+                  LatLng(36.87755134396642, 31.175886482820044),
+                  LatLng(36.951684290162035, 31.11942584286045),
+                  LatLng(37.11436757852954, 30.945256277344882),
+                  LatLng(37.19840982890453, 30.781750144873083),
+                  LatLng(37.127593897158405, 30.579144725270357),
+                  LatLng(37.022664616366825, 30.5305668192422),
+                  LatLng(37.024556518371675, 30.52464268436072),
+                  LatLng(36.80383317969072, 30.399051023329868),
+                  LatLng(36.480186406615005, 30.520931326886657),
+                ],
+                strokeWidth: 2.0,
+                color: Colors.red,
+              ),
+            );
+
             return FlutterMap(
               mapController: _mapController,
               options: MapOptions(
-                center: LatLng(36.8951, 30.7126), // Antalya, Turkey
-                zoom: 13.0,
+                center: LatLng(36.896951337741065, 30.688470309569553), // memurevleri mahallesi konumu
+                zoom: 12.2,
+                maxZoom: 13.0,
+                minZoom: 12.0,
               ),
-
               children: [
                 TileLayer(
                   urlTemplate: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
@@ -172,6 +195,9 @@ class _MainpageState extends State<Mainpage> {
                 ),
                 MarkerLayer(
                   markers: markers,
+                ),
+                PolylineLayer(
+                  polylines: polylines,
                 ),
               ],
             );
