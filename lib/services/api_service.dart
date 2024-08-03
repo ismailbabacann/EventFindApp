@@ -13,7 +13,7 @@ Future<List<Event1>> fetchEvents() async {
   );
 
   if (response.statusCode == 200) {
-    var data = json.decode(response.body);
+    var data =  json.decode(utf8.decode(response.bodyBytes));
     return (data['results'] as List)
         .map((e) => Event1.fromJson(e))
         .toList();

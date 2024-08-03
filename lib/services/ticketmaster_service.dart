@@ -23,20 +23,32 @@ class Event2 {
   final String location;
   final double latitude;
   final double longitude;
+  final String type;
+  final String imageUrl;
 
   Event2({
     required this.name,
     required this.location,
     required this.latitude,
     required this.longitude,
+    required this.type,
+    required this.imageUrl,
   });
 
   factory Event2.fromJson(Map<String, dynamic> json) {
+    // Resim URL'sini almak için önceki listedeki ilk resmi seçiyoruz aman burası önemli!!!
+    var imageUrl = json['images'] != null && json['images'].isNotEmpty
+        ? json['images'][0]['url']
+        : '';
+
     return Event2(
       name: json['name'],
       location: json['_embedded']['venues'][0]['name'],
       latitude: double.parse(json['_embedded']['venues'][0]['location']['latitude']),
       longitude: double.parse(json['_embedded']['venues'][0]['location']['longitude']),
+      type: json['classifications'][0]['segment']['name'],
+      imageUrl: imageUrl,
     );
   }
 }
+

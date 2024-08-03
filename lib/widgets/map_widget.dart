@@ -1,4 +1,5 @@
 import 'package:eventfindapp/services/ticketmaster_service.dart';
+import 'package:eventfindapp/widgets/custom_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -21,7 +22,7 @@ class MapWidget extends StatelessWidget {
     List<Marker> markers = [];
     List<Polyline> polylines = [];
 
-    Map<String, IconData> eventIcons = {
+    Map<String, IconData> eventIcons1 = {
       'school-holidays': Icons.school,
       'public-holidays': Icons.holiday_village,
       'observances': Icons.approval,
@@ -32,7 +33,7 @@ class MapWidget extends StatelessWidget {
       'festivals': Icons.festival,
       'performing-arts': Icons.theater_comedy,
       'sports': Icons.sports_tennis,
-      'community': Icons.diversity_3,
+      'community': Icons.people,
       'daylight-savings': Icons.solar_power,
       'airport-delays': Icons.connecting_airports,
       'severe-weather': Icons.cloudy_snowing,
@@ -40,6 +41,39 @@ class MapWidget extends StatelessWidget {
       'terror': Icons.upcoming,
       'health-warnings': Icons.curtains,
       'academic': Icons.book,
+    };
+
+    Map<String, Color> eventColors1 = {
+      'school-holidays': Colors.blue,
+      'public-holidays': Colors.green,
+      'observances': Colors.orange,
+      'politics': Colors.red,
+      'conferences': Colors.purple,
+      'expos': Colors.yellow,
+      'concerts': Colors.pink,
+      'festivals': Colors.cyan,
+      'performing-arts': Colors.teal,
+      'sports': Colors.indigo,
+      'community': Colors.amber,
+      'daylight-savings': Colors.lime,
+      'airport-delays': Colors.brown,
+      'severe-weather': Colors.grey,
+      'disasters': Colors.deepOrange,
+      'terror': Colors.deepPurple,
+      'health-warnings': Colors.lightGreen,
+      'academic': Colors.blueGrey,
+    };
+
+    Map<String, IconData> eventIcons2 = {
+      'Music': Icons.music_note,
+      'Undefined': Icons.camera_outlined,
+      'Arts & Theatre': Icons.theater_comedy,
+    };
+
+    Map<String, Color> eventColors2 = {
+      'Music': Colors.deepOrangeAccent,
+      'Arts & Theatre': Colors.blue,
+      'Undefined': Colors.purple,
     };
 
     for (var event in events) {
@@ -56,10 +90,10 @@ class MapWidget extends StatelessWidget {
                 (location[1] as num).toDouble(), // latitude
                 (location[0] as num).toDouble(), // longitude
               ),
-              builder: (ctx) => IconButton(
-                icon: Icon(eventIcons[type] ?? Icons.account_balance),
-                color: Colors.deepPurple,
-                iconSize: 50.0,
+              builder: (ctx) => CustomMarker(
+                icon: eventIcons1[type] ?? Icons.account_balance,
+                iconColor: eventColors1[type] ?? Colors.deepPurple,
+                iconSize: 35.0,
                 onPressed: () {
                   showDialog(
                     context: ctx,
@@ -86,30 +120,45 @@ class MapWidget extends StatelessWidget {
       }
     }
 
-      for (var event2 in events2) {
-        markers.add(Marker(
-          width: 80.0,
-          height: 80.0,
-          point: LatLng(event2.latitude, event2.longitude),
-          builder: (ctx) => Container(
-            child: IconButton(
-              icon: Icon(Icons.location_on),
-              color: Colors.red,
-              iconSize: 45.0,
-              onPressed: () {
-                showDialog(
-                  context: ctx,
-                  builder: (ctx) => AlertDialog(
-                    title: Text(event2.name),
-                    content: Text(event2.location),
+    for (var event2 in events2) {
+      markers.add(Marker(
+        width: 80.0,
+        height: 80.0,
+        point: LatLng(event2.latitude, event2.longitude),
+        builder: (ctx) => CustomMarker(
+          icon: eventIcons2[event2.type] ?? Icons.location_on,
+          iconColor: eventColors2[event2.type] ?? Colors.red,
+          iconSize: 40.0,
+          onPressed: () {
+            showDialog(
+              context: ctx,
+              builder: (ctx) => AlertDialog(
+                title: Text(event2.name),
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Location: ${event2.location}'),
+                    if (event2.imageUrl.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Image.network(event2.imageUrl),
+                      ),
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Close'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                );
-              },
-            ),
-          ),
-        ));
-      }
-
+                ],
+              ),
+            );
+          },
+        ),
+      ));
+    }
 
     polylines.add(
       Polyline(
@@ -135,13 +184,12 @@ class MapWidget extends StatelessWidget {
       options: MapOptions(
         center: LatLng(36.896951337741065, 30.688470309569553),
         zoom: 12.2,
-        maxZoom: 13.0,
+        maxZoom: 17.0,
         minZoom: 11.0,
       ),
       children: [
         TileLayer(
-          urlTemplate:
-              "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+          urlTemplate: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
           subdomains: ['a', 'b', 'c'],
         ),
         PolylineLayer(

@@ -13,8 +13,8 @@ class Event1 {
 
   factory Event1.fromJson(Map<String, dynamic> json) {
     return Event1(
-      title: json['title'] ?? 'No title',
-      description: json['description'] ?? 'No description available.',
+      title: json['title'] ?? 'No title' ,
+      description: json['description'] ?? 'No description available.' ,
       location: json['location'] ?? [],
       category: json['category'] ?? 'Unknown',
     );
