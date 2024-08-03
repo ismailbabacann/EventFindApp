@@ -47,15 +47,15 @@ class _MainpageState extends State<Mainpage> {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
+              icon: const Icon(Icons.menu, color: Colors.white,),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
             );
           },
         ),
-        title: const Center(child: Text("NeYakın!", style: TextStyle(color: Colors.white))),
-        backgroundColor: Colors.deepPurpleAccent,
+        title: const Center(child: Text("NeYakın!", style: TextStyle(color: Colors.white),)),
+        backgroundColor: Colors.black,
       ),
       drawer: Drawer(
         child: ListView(
@@ -63,7 +63,7 @@ class _MainpageState extends State<Mainpage> {
           children: <Widget>[
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.deepPurpleAccent,
+                color: Colors.black,
               ),
               child: Text(
                 'İsmail Babacan',
@@ -111,10 +111,33 @@ class _MainpageState extends State<Mainpage> {
             List<Marker> markers = [];
             List<Polyline> polylines = [];
 
+            Map<String, IconData> eventIcons = {
+              'school-holidays': Icons.school,
+              'public-holidays': Icons.holiday_village,
+              'observances': Icons.approval,
+              'politics': Icons.how_to_vote,
+              'conferences': Icons.account_balance,
+              'expos': Icons.stadium_sharp,
+              'concerts': Icons.library_music,
+              'festivals': Icons.festival,
+              'performing-arts': Icons.theater_comedy,
+              'sports': Icons.sports_tennis,
+              'community': Icons.diversity_3,
+              'daylight-savings': Icons.solar_power,
+              'airport-delays': Icons.connecting_airports,
+              'severe-weather': Icons.cloudy_snowing,
+              'disasters': Icons.volcano,
+              'terror': Icons.upcoming,
+              'health-warnings': Icons.curtains,
+              'academic': Icons.book,
+            };
+
             for (var event in events) {
               try {
                 print('Event: $event'); // Her etkinliği kontrol etme
                 var location = event['location'];
+                var type = event['category'] ?? 'Unknown';
+
                 if (location != null &&
                     location[0] != null &&
                     location[1] != null) {
@@ -126,31 +149,29 @@ class _MainpageState extends State<Mainpage> {
                         (location[1] as num).toDouble(), // latitude
                         (location[0] as num).toDouble(), // longitude
                       ),
-                      builder: (ctx) => Container(
-                        child: IconButton(
-                          icon: const Icon(Icons.location_on_outlined),
-                          color: Colors.deepPurpleAccent,
-                          iconSize: 50.0,
-                          onPressed: () {
-                            showDialog(
-                              context: ctx,
-                              builder: (context) => AlertDialog(
-                                title: Text(event['title'] ?? 'Event'),
-                                content: Text(
-                                  event['description'] ?? 'No description available.',
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text('Kapat'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
+                      builder: (ctx) => IconButton(
+                        icon: Icon(eventIcons[type] ?? Icons.account_balance),
+                        color: Colors.deepPurple,
+                        iconSize: 50.0,
+                        onPressed: () {
+                          showDialog(
+                            context: ctx,
+                            builder: (context) => AlertDialog(
+                              title: Text(event['title'] ?? 'Event'),
+                              content: Text(
+                                event['description'] ?? 'No description available.',
                               ),
-                            );
-                          },
-                        ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('Kapat'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ),
                   );
@@ -160,7 +181,6 @@ class _MainpageState extends State<Mainpage> {
               }
             }
 
-            // Antalya il sınırları için Polyline ekleme
             polylines.add(
               Polyline(
                 points: [
@@ -186,18 +206,18 @@ class _MainpageState extends State<Mainpage> {
                 center: LatLng(36.896951337741065, 30.688470309569553), // memurevleri mahallesi konumu
                 zoom: 12.2,
                 maxZoom: 13.0,
-                minZoom: 12.0,
+                minZoom: 11.0,
               ),
               children: [
                 TileLayer(
                   urlTemplate: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
                   subdomains: ['a', 'b', 'c'],
                 ),
-                MarkerLayer(
-                  markers: markers,
-                ),
                 PolylineLayer(
                   polylines: polylines,
+                ),
+                MarkerLayer(
+                  markers: markers,
                 ),
               ],
             );
