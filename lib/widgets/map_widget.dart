@@ -21,6 +21,7 @@ class MapWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Marker> markers = [];
     List<Polyline> polylines = [];
+    Color mainColor = Color(0xFF6D3B8C);
 
     Map<String, IconData> eventIcons1 = {
       'school-holidays': Icons.school,
@@ -29,7 +30,7 @@ class MapWidget extends StatelessWidget {
       'politics': Icons.how_to_vote,
       'conferences': Icons.account_balance,
       'expos': Icons.stadium_sharp,
-      'concerts': Icons.library_music,
+      'concerts': Icons.music_note,
       'festivals': Icons.festival,
       'performing-arts': Icons.theater_comedy,
       'sports': Icons.sports_tennis,
@@ -42,7 +43,7 @@ class MapWidget extends StatelessWidget {
       'health-warnings': Icons.curtains,
       'academic': Icons.book,
     };
-
+  /*
     Map<String, Color> eventColors1 = {
       'school-holidays': Colors.blue,
       'public-holidays': Colors.green,
@@ -63,19 +64,19 @@ class MapWidget extends StatelessWidget {
       'health-warnings': Colors.lightGreen,
       'academic': Colors.blueGrey,
     };
-
+*/
     Map<String, IconData> eventIcons2 = {
       'Music': Icons.music_note,
       'Undefined': Icons.camera_outlined,
       'Arts & Theatre': Icons.theater_comedy,
     };
-
+/*
     Map<String, Color> eventColors2 = {
       'Music': Colors.deepOrangeAccent,
       'Arts & Theatre': Colors.blue,
       'Undefined': Colors.purple,
     };
-
+*/
     for (var event in events) {
       try {
         var location = event.location;
@@ -92,8 +93,9 @@ class MapWidget extends StatelessWidget {
               ),
               builder: (ctx) => CustomMarker(
                 icon: eventIcons1[type] ?? Icons.account_balance,
-                iconColor: eventColors1[type] ?? Colors.deepPurple,
-                iconSize: 35.0,
+                iconColor: //eventColors1[type] ??
+                    Colors.white,
+                iconSize: 25.0,
                 onPressed: () {
                   showDialog(
                     context: ctx,
@@ -127,8 +129,9 @@ class MapWidget extends StatelessWidget {
         point: LatLng(event2.latitude, event2.longitude),
         builder: (ctx) => CustomMarker(
           icon: eventIcons2[event2.type] ?? Icons.location_on,
-          iconColor: eventColors2[event2.type] ?? Colors.red,
-          iconSize: 40.0,
+          iconColor: //eventColors2[event2.type] ??
+              Colors.white,
+          iconSize: 25.0,
           onPressed: () {
             showDialog(
               context: ctx,

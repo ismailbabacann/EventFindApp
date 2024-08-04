@@ -6,6 +6,7 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: Colors.white,
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
@@ -22,15 +23,15 @@ class CustomDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.message),
-            title: const Text('Mesajlar'),
+            leading: const Icon(Icons.account_circle),
+            title: const Text('Profil'),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: const Icon(Icons.account_circle),
-            title: const Text('Profil'),
+            leading: const Icon(Icons.password),
+            title: const Text('Şifreyi Değiştir'),
             onTap: () {
               Navigator.pop(context);
             },

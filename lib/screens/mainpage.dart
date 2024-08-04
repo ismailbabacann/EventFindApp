@@ -19,6 +19,7 @@ class _MainPageState extends State<MainPage> {
 
   final TicketmasterService ticketmasterService = TicketmasterService();
   List<Event2> events2 = [];
+   Color mainColor = Color(0xFF6D3B8C);
 
   void loadTicketmasterEvents() async {
     events2 = await ticketmasterService.getEvents();
@@ -34,36 +35,67 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white,),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          },
+    return SafeArea(
+      child: Scaffold(
+        drawer: const CustomDrawer(),
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: FutureBuilder<List<Event1>>(
+                future: _events,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No events found'));
+                  } else {
+                    var events = snapshot.data!;
+                    return MapWidget(events: events, events2: events2, mapController: _mapController);
+                  }
+                },
+              ),
+            ),
+            Positioned(
+              top: 10.0,
+              left: 10.0,
+              right: 10.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Builder(
+                    builder: (BuildContext context) {
+                      return Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          color: mainColor,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.menu, color: Colors.white),
+                          onPressed: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(width: 10,),
+                  Center(
+                    child: Image.asset(
+                      'lib/assets/icons/resim_2024_08_04_181249667_photoroom.png',
+                      height: 45.0,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 48),
+                ],
+              ),
+            ),
+          ],
         ),
-        title: const Center(child: Text("NeYakın!", style: TextStyle(color: Colors.white),)),
-        backgroundColor: Colors.black,
-      ),
-      drawer: const CustomDrawer(),
-      body: FutureBuilder<List<Event1>>(
-        future: _events,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No events found'));
-          } else {
-            var events = snapshot.data!;
-            return MapWidget(events: events, events2: events2, mapController: _mapController);
-          }
-        },
       ),
     );
   }
