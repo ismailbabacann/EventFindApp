@@ -96,19 +96,33 @@ class MapWidget extends StatelessWidget {
                 iconColor: Colors.white,
                 iconSize: 25.0,
                 onPressed: () {
-                  showDialog(
+                  showModalBottomSheet(
                     context: ctx,
-                    builder: (context) => AlertDialog(
-                      title: Text(event.title),
-                      content: Text(event.description),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Kapat'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                    builder: (context) => SingleChildScrollView(
+                      child: Container(
+                        padding: EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              event.title,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                            Text(event.description),
+                            SizedBox(height: 16.0),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Kapat'),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   );
                 },
@@ -132,29 +146,38 @@ class MapWidget extends StatelessWidget {
           iconColor: Colors.white,
           iconSize: 25.0,
           onPressed: () {
-            showDialog(
+            showModalBottomSheet(
               context: ctx,
-              builder: (ctx) => AlertDialog(
-                title: Text(event2.name),
-                content: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Location: ${event2.location}'),
-                    if (event2.imageUrl.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Image.network(event2.imageUrl),
+              builder: (ctx) => SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        event2.name,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                  ],
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Close'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                      SizedBox(height: 8.0),
+                      Text('Location: ${event2.location}'),
+                      if (event2.imageUrl.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Image.network(event2.imageUrl),
+                        ),
+                      SizedBox(height: 16.0),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Close'),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             );
           },

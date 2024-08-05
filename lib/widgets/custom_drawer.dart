@@ -1,4 +1,6 @@
+import 'package:eventfindapp/screens/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:eventfindapp/screens/profile_page.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -26,7 +28,10 @@ class CustomDrawer extends StatelessWidget {
             leading: const Icon(Icons.account_circle),
             title: const Text('Profil'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
             },
           ),
           ListTile(
@@ -41,6 +46,13 @@ class CustomDrawer extends StatelessWidget {
             title: const Text('Ayarlar'),
             onTap: () {
               Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.exit_to_app),
+            title: const Text('Çıkış Yap'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
             },
           ),
         ],
