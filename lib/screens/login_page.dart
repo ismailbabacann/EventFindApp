@@ -1,4 +1,5 @@
 import 'package:eventfindapp/screens/mainpage.dart';
+import 'package:eventfindapp/screens/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -20,7 +21,7 @@ class LoginPage extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
               SizedBox(height: 16),
-              Text(
+              const Text(
                 'Hesabına giriş yap',
                 style: TextStyle(
                   fontSize: 20,
@@ -28,7 +29,7 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 8),
-              Text(
+              const Text(
                 'Uygulamaya giriş yapmak için mail adresini gir',
                 style: TextStyle(fontSize: 16),
                 textAlign: TextAlign.center,
@@ -89,7 +90,7 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 16),
               TextButton(
                 onPressed: () {
-                  // Kaydolma işlemini ayarlıcam
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
                 },
                 child: Text(
                   'Hesabın yok mu? Kaydolmak için tıkla!',
