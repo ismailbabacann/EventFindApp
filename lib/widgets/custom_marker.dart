@@ -6,37 +6,37 @@ class CustomMarker extends StatelessWidget {
   final Color iconColor;
   final double iconSize;
   final VoidCallback onPressed;
+  final String backgroundSvg;
 
   CustomMarker({
     required this.icon,
     required this.iconColor,
     required this.iconSize,
     required this.onPressed,
+    required this.backgroundSvg,
   });
 
   @override
   Widget build(BuildContext context) {
-    Color mainColor = Color(0xFF6D3B8C);
     return GestureDetector(
       onTap: onPressed,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // bu tarz kullanmayı unutma bidahikine
           SvgPicture.asset(
-            'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
+            backgroundSvg,
             width: iconSize + 40,
             height: iconSize + 40,
             alignment: Alignment.center,
           ),
           Transform.translate(
-            offset: Offset(-8, -12),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: iconSize,
-            ),
-          ),
+        offset: Offset(-8, -12),
+        child: Icon(
+          icon,
+          color: iconColor,
+          size: iconSize,
+        ),
+        ),
         ],
       ),
     );

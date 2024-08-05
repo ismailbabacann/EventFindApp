@@ -43,40 +43,40 @@ class MapWidget extends StatelessWidget {
       'health-warnings': Icons.curtains,
       'academic': Icons.book,
     };
-  /*
-    Map<String, Color> eventColors1 = {
-      'school-holidays': Colors.blue,
-      'public-holidays': Colors.green,
-      'observances': Colors.orange,
-      'politics': Colors.red,
-      'conferences': Colors.purple,
-      'expos': Colors.yellow,
-      'concerts': Colors.pink,
-      'festivals': Colors.cyan,
-      'performing-arts': Colors.teal,
-      'sports': Colors.indigo,
-      'community': Colors.amber,
-      'daylight-savings': Colors.lime,
-      'airport-delays': Colors.brown,
-      'severe-weather': Colors.grey,
-      'disasters': Colors.deepOrange,
-      'terror': Colors.deepPurple,
-      'health-warnings': Colors.lightGreen,
-      'academic': Colors.blueGrey,
+
+    Map<String, String> eventBackgrounds1 = {
+      'school-holidays': 'lib/assets/icons/iconbackground_blue.svg',
+      'public-holidays': 'lib/assets/icons/iconbackground_cyan.svg',
+      'observances': 'lib/assets/icons/iconbackground_darkblue.svg',
+      'politics': 'lib/assets/icons/iconbackground_red.svg',
+      'conferences': 'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
+      'expos': 'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
+      'concerts': 'lib/assets/icons/iconbackground_darkblue.svg',
+      'festivals': 'lib/assets/icons/iconbackground_cyan.svg',
+      'performing-arts': 'lib/assets/icons/iconbackground_red.svg',
+      'sports': 'lib/assets/icons/iconbackground_green.svg',
+      'community': 'lib/assets/icons/iconbackground_darkblue.svg',
+      'daylight-savings': 'lib/assets/icons/iconbackground_blue.svg',
+      'airport-delays': 'lib/assets/icons/iconbackground_green.svg',
+      'severe-weather': 'lib/assets/icons/iconbackground_red.svg',
+      'disasters': 'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
+      'terror': 'lib/assets/icons/iconbackground_cyan.svg',
+      'health-warnings': 'lib/assets/icons/iconbackground_blue.svg',
+      'academic': 'lib/assets/icons/iconbackground_darkblue.svg',
     };
-*/
+
     Map<String, IconData> eventIcons2 = {
       'Music': Icons.music_note,
       'Undefined': Icons.camera_outlined,
       'Arts & Theatre': Icons.theater_comedy,
     };
-/*
-    Map<String, Color> eventColors2 = {
-      'Music': Colors.deepOrangeAccent,
-      'Arts & Theatre': Colors.blue,
-      'Undefined': Colors.purple,
+
+    Map<String, String> eventBackgrounds2 = {
+      'Music': 'lib/assets/icons/iconbackground_darkblue.svg',
+      'Undefined': 'lib/assets/icons/iconbackground_green.svg',
+      'Arts & Theatre': 'lib/assets/icons/iconbackground_red.svg',
     };
-*/
+
     for (var event in events) {
       try {
         var location = event.location;
@@ -93,8 +93,7 @@ class MapWidget extends StatelessWidget {
               ),
               builder: (ctx) => CustomMarker(
                 icon: eventIcons1[type] ?? Icons.account_balance,
-                iconColor: //eventColors1[type] ??
-                    Colors.white,
+                iconColor: Colors.white,
                 iconSize: 25.0,
                 onPressed: () {
                   showDialog(
@@ -113,6 +112,7 @@ class MapWidget extends StatelessWidget {
                     ),
                   );
                 },
+                backgroundSvg: eventBackgrounds1[type] ?? 'lib/assets/icons/iconbackground_red.svg',
               ),
             ),
           );
@@ -129,8 +129,7 @@ class MapWidget extends StatelessWidget {
         point: LatLng(event2.latitude, event2.longitude),
         builder: (ctx) => CustomMarker(
           icon: eventIcons2[event2.type] ?? Icons.location_on,
-          iconColor: //eventColors2[event2.type] ??
-              Colors.white,
+          iconColor: Colors.white,
           iconSize: 25.0,
           onPressed: () {
             showDialog(
@@ -159,6 +158,7 @@ class MapWidget extends StatelessWidget {
               ),
             );
           },
+          backgroundSvg: eventBackgrounds2[event2.type] ?? 'lib/assets/icons/iconbackground_red.svg',
         ),
       ));
     }
