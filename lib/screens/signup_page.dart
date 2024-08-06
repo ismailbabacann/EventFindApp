@@ -14,7 +14,7 @@ class SignUpPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'lib/assets/icons/resim_2024_08_04_181249667_photoroom.png',
+                  'lib/assets/icons/logo_enyakın.svg',
                   height: 45.0,
                   fit: BoxFit.cover,
                 ),
