@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:eventfindapp/assets/theme/mycolors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Color mainColor = Color(0xFF6D3B8C);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -13,7 +14,7 @@ class SignUpPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
+                SvgPicture.asset(
                   'lib/assets/icons/logo_enyakın.svg',
                   height: 45.0,
                   fit: BoxFit.cover,

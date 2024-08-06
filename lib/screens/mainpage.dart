@@ -5,6 +5,8 @@ import 'package:eventfindapp/services/ticketmaster_service.dart';
 import 'package:eventfindapp/services/api_service.dart';
 import 'package:eventfindapp/widgets/custom_drawer.dart';
 import 'package:eventfindapp/widgets/map_widget.dart';
+import 'package:eventfindapp/assets/theme/mycolors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -19,7 +21,6 @@ class _MainPageState extends State<MainPage> {
 
   final TicketmasterService ticketmasterService = TicketmasterService();
   List<Event2> events2 = [];
-   Color mainColor = Color(0xFF6D3B8C);
 
   void loadTicketmasterEvents() async {
     events2 = await ticketmasterService.getEvents();
@@ -84,8 +85,8 @@ class _MainPageState extends State<MainPage> {
                   ),
                   SizedBox(width: 10,),
                   Center(
-                    child: Image.asset(
-                      'lib/assets/icons/resim_2024_08_04_181249667_photoroom.png',
+                    child: SvgPicture.asset(
+                      'lib/assets/icons/logo_enyakın.svg',
                       height: 45.0,
                       fit: BoxFit.cover,
                     ),

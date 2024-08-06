@@ -49,11 +49,11 @@ class MapWidget extends StatelessWidget {
       'public-holidays': 'lib/assets/icons/iconbackground_cyan.svg',
       'observances': 'lib/assets/icons/iconbackground_darkblue.svg',
       'politics': 'lib/assets/icons/iconbackground_red.svg',
-      'conferences': 'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
+      'conferences': 'lib/assets/icons/iconbackground_cyan.svg',
       'expos': 'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
-      'concerts': 'lib/assets/icons/iconbackground_green.svg',
+      'concerts': 'lib/assets/icons/iconbackground_red.svg',
       'festivals': 'lib/assets/icons/iconbackground_cyan.svg',
-      'performing-arts': 'lib/assets/icons/iconbackground_cyan.svg',
+      'performing-arts': 'lib/assets/icons/iconbackground_blue.svg',
       'sports': 'lib/assets/icons/iconbackground_blue.svg',
       'community': 'lib/assets/icons/iconbackground_darkblue.svg',
       'daylight-savings': 'lib/assets/icons/iconbackground_blue.svg',
@@ -72,9 +72,9 @@ class MapWidget extends StatelessWidget {
     };
 
     Map<String, String> eventBackgrounds2 = {
-      'Music': 'lib/assets/icons/iconbackground_darkblue.svg',
+      'Music': 'lib/assets/icons/iconbackground_green.svg',
       'Undefined': 'lib/assets/icons/iconbackground_green.svg',
-      'Arts & Theatre': 'lib/assets/icons/iconbackground_red.svg',
+      'Arts & Theatre': 'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
     };
 
     for (var event in events) {
