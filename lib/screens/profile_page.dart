@@ -6,9 +6,9 @@ class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
+File? _globalImage;
 
 class _ProfilePageState extends State<ProfilePage> {
-  File? _image;
   final _nameController = TextEditingController(text: 'İsmail Babacan');
   final _aboutController = TextEditingController(
       text:
@@ -20,7 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
+        _globalImage = File(pickedFile.path);
       }
     });
   }
@@ -39,14 +39,14 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 TextField(
                   controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Ad Soyad'),
+                  decoration: const InputDecoration(labelText: 'Ad Soyad'),
                 ),
                 TextField(
                   controller: _aboutController,
-                  decoration: InputDecoration(labelText: 'Hakkımda'),
+                  decoration: const InputDecoration(labelText: 'Hakkımda'),
                   maxLines: 3,
                 ),
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'İlgi Alanları',
@@ -78,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Navigator.pop(context);
                     setState(() {});
                   },
-                  child: Text('Kaydet'),
+                  child: const Text('Kaydet'),
                 ),
               ],
             ),
@@ -95,12 +95,12 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('Profil'),
+        title: const Text('Profil'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -112,39 +112,41 @@ class _ProfilePageState extends State<ProfilePage> {
                 onTap: _pickImage,
                 child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: _image != null ? FileImage(_image!) : NetworkImage('https://via.placeholder.com/150') as ImageProvider,
-                  child: Align(
+                  backgroundImage: _globalImage != null
+                      ? FileImage(_globalImage!)
+                      : const NetworkImage('https://via.placeholder.com/150') as ImageProvider,
+                  child: const Align(
                     alignment: Alignment.bottomRight,
                     child: Icon(Icons.change_circle, color: Colors.black),
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 _nameController.text,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: _editProfile,
-                icon: Icon(Icons.edit),
-                label: Text('Profili Düzenle'),
+                icon: const Icon(Icons.edit),
+                label: const Text('Profili Düzenle'),
               ),
-              SizedBox(height: 24),
-              Align(
+              const SizedBox(height: 24),
+              const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Hakkımda',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 _aboutController.text,
-                style: TextStyle(color: Colors.grey, fontSize: 16),
+                style: const TextStyle(color: Colors.grey, fontSize: 16),
               ),
-              SizedBox(height: 24),
-              Align(
+              const SizedBox(height: 24),
+              const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'İlgi Alanları',

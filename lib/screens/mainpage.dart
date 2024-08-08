@@ -97,7 +97,7 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
             Positioned(
-              bottom: 10.0,
+              top: 70,
               left: 0.0,
               right: 0.0,
               child: events2.isNotEmpty
