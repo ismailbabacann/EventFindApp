@@ -25,6 +25,8 @@ class Event2 {
   final double longitude;
   final String type;
   final String imageUrl;
+  final String localTime;
+  final String localDate;
 
   Event2({
     required this.name,
@@ -33,6 +35,8 @@ class Event2 {
     required this.longitude,
     required this.type,
     required this.imageUrl,
+    required this.localTime,
+    required this.localDate,
   });
 
   factory Event2.fromJson(Map<String, dynamic> json) {
@@ -48,6 +52,8 @@ class Event2 {
       longitude: double.parse(json['_embedded']['venues'][0]['location']['longitude']),
       type: json['classifications'][0]['segment']['name'],
       imageUrl: imageUrl,
+      localTime: json['dates']['start']['localTime'],
+      localDate: json['dates']['start']['localDate'],
     );
   }
 }

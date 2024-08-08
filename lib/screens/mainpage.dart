@@ -5,6 +5,7 @@ import 'package:eventfindapp/services/ticketmaster_service.dart';
 import 'package:eventfindapp/services/api_service.dart';
 import 'package:eventfindapp/widgets/custom_drawer.dart';
 import 'package:eventfindapp/widgets/map_widget.dart';
+import 'package:eventfindapp/widgets/ratingcard.dart';  // import the new widget
 import 'package:eventfindapp/assets/theme/mycolors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -94,6 +95,14 @@ class _MainPageState extends State<MainPage> {
                   const SizedBox(width: 48),
                 ],
               ),
+            ),
+            Positioned(
+              bottom: 10.0,
+              left: 0.0,
+              right: 0.0,
+              child: events2.isNotEmpty
+                  ? CarouselSliderWidget(events: events2)
+                  : const Center(child: CircularProgressIndicator()),
             ),
           ],
         ),
