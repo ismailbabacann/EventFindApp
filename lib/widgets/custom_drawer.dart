@@ -67,6 +67,13 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.warning_rounded , color: Colors.grey,),
+            title: const Text('Kılavuz' ,  style: TextStyle(fontWeight: FontWeight.bold)),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.settings , color: Colors.grey,),
             title: const Text('Şifreyi Değiştir' ,  style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {

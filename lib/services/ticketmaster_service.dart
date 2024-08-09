@@ -29,6 +29,7 @@ class Event2 {
   final String localDate;
   final String genre;
   final String address;
+  final String url;
 
   Event2({
     required this.name,
@@ -41,6 +42,7 @@ class Event2 {
     required this.localDate,
     required this.genre,
     required this.address,
+    required this.url,
   });
 
   factory Event2.fromJson(Map<String, dynamic> json) {
@@ -52,7 +54,7 @@ class Event2 {
     return Event2(
       name: json['name'],
       location: json['_embedded']['venues'][0]['name'],
-      address: json['_embedded']['venues'][0]['address']['line1'] ?? '',
+      address: json['_embedded']['venues'][0]['address']['line1'] ?? 'Antalya,Konyaaltı',
       latitude: double.parse(json['_embedded']['venues'][0]['location']['latitude']),
       longitude: double.parse(json['_embedded']['venues'][0]['location']['longitude']),
       type: json['classifications'][0]['segment']['name'],
@@ -60,7 +62,7 @@ class Event2 {
       imageUrl: imageUrl,
       localTime: json['dates']['start']['localTime'],
       localDate: json['dates']['start']['localDate'],
-
+      url: json['_embedded']['venues'][0]['url'] ?? 'https://www.biletix.com/search/TURKIYE/tr?category_sb=-1&date_sb=-1&city_sb=Antalya#!city_sb:Antalya',
     );
   }
 }

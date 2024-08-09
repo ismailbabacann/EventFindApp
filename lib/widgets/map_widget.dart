@@ -7,6 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:eventfindapp/models/event.dart';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class MapWidget extends StatelessWidget {
   final List<Event1> events;
@@ -19,6 +21,21 @@ class MapWidget extends StatelessWidget {
     super.key,
     required this.events2,
   });
+
+  void _launchGoogleMaps(double latitude, double longitude) async {
+    final url = 'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude';
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrlString(uri.toString(), mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void _launchURL(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrlString(url.toString(), mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $urlString';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,32 +225,33 @@ class MapWidget extends StatelessWidget {
                           SizedBox(
                             height: 10,
                           ),
-                          SingleChildScrollView(
-                            dragStartBehavior: DragStartBehavior.down ,
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SvgPicture.asset(
-                                    'lib/assets/icons/locationicon.svg'),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(event2.location),
-                                    Text(
-                                      event2.address,
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.bold,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SvgPicture.asset(
+                                  'lib/assets/icons/locationicon.svg'),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(event2.location),
+                                  SizedBox(
+                                    width: 200,
+                                    child: Expanded(
+                                      child: Text(
+                                        event2.address,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -262,9 +280,20 @@ class MapWidget extends StatelessWidget {
                               ),
                             ],
                           ),
+                          Column(
+                            children: [
+                              Text("Katılımcıları görmek için " , style: TextStyle(fontSize: 10 , color: mainColor , fontWeight: FontWeight.bold),),
+                              SvgPicture.asset('lib/assets/icons/pro.svg' , height: 40, width: 40,),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 30,),
+                      Row(
+                        children: [
                           ElevatedButton(
                             onPressed: () {
-                              // Invite butonuna tıklanınca olacaklar
+                              _launchGoogleMaps(event2.latitude, event2.longitude);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: mainColor,
@@ -272,7 +301,40 @@ class MapWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: Text('Invite' , style: TextStyle(color: Colors.white),),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.map_outlined, color: Colors.white),
+                                SizedBox(width: 8), // İkon ile yazı arasındaki boşluk
+                                Text(
+                                  'Yol Tarifi',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 60,),
+                          ElevatedButton(
+                            onPressed: () {
+                              _launchURL(event2.url);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: mainColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.airplane_ticket_outlined, color: Colors.white),
+                                SizedBox(width: 8), // İkon ile yazı arasındaki boşluk
+                                Text(
+                                  'Bilet Al',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
