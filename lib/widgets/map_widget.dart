@@ -1,16 +1,19 @@
 import 'package:eventfindapp/services/ticketmaster_service.dart';
 import 'package:eventfindapp/widgets/custom_marker.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:eventfindapp/models/event.dart';
+import 'package:eventfindapp/assets/theme/mycolors.dart';
 
 class MapWidget extends StatelessWidget {
   final List<Event1> events;
   final List<Event2> events2;
   final MapController mapController;
 
-  const MapWidget({
+  MapWidget({
     required this.events,
     required this.mapController,
     super.key,
@@ -21,7 +24,6 @@ class MapWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Marker> markers = [];
     List<Polyline> polylines = [];
-    Color mainColor = Color(0xFF6D3B8C);
 
     Map<String, IconData> eventIcons1 = {
       'school-holidays': Icons.school,
@@ -100,6 +102,7 @@ class MapWidget extends StatelessWidget {
                     context: ctx,
                     builder: (context) => SingleChildScrollView(
                       child: Container(
+                        color: Colors.white,
                         padding: EdgeInsets.all(16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +110,7 @@ class MapWidget extends StatelessWidget {
                             Text(
                               event.title,
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 32,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -126,7 +129,8 @@ class MapWidget extends StatelessWidget {
                     ),
                   );
                 },
-                backgroundSvg: eventBackgrounds1[type] ?? 'lib/assets/icons/iconbackground_red.svg',
+                backgroundSvg: eventBackgrounds1[type] ??
+                    'lib/assets/icons/iconbackground_red.svg',
               ),
             ),
           );
@@ -147,6 +151,7 @@ class MapWidget extends StatelessWidget {
           iconSize: 25.0,
           onPressed: () {
             showModalBottomSheet(
+              backgroundColor: Colors.white,
               context: ctx,
               builder: (ctx) => SingleChildScrollView(
                 child: Container(
@@ -154,6 +159,12 @@ class MapWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if (event2.imageUrl.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Image.network(event2.imageUrl),
+                        ),
+                      SizedBox(height: 16.0),
                       Text(
                         event2.name,
                         style: TextStyle(
@@ -161,14 +172,111 @@ class MapWidget extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 8.0),
-                      Text('Location: ${event2.location}'),
-                      if (event2.imageUrl.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Image.network(event2.imageUrl),
+                      Text(
+                        event2.type,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w200,
                         ),
-                      SizedBox(height: 16.0),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              SvgPicture.asset('lib/assets/icons/dateicon.svg'),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(event2.localDate),
+                                  Text(
+                                    event2.localTime,
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          SingleChildScrollView(
+                            dragStartBehavior: DragStartBehavior.down ,
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SvgPicture.asset(
+                                    'lib/assets/icons/locationicon.svg'),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(event2.location),
+                                    Text(
+                                      event2.address,
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Stack(
+                                children: [
+                                  Image.asset(
+                                    'lib/assets/icons/group.png',
+                                    height: 50,
+                                    width: 100,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                '+23 Going',
+                                style: TextStyle(
+                                  color: mainColor, // Mor renk kodu
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Invite butonuna tıklanınca olacaklar
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: mainColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text('Invite' , style: TextStyle(color: Colors.white),),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 50,),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -181,7 +289,8 @@ class MapWidget extends StatelessWidget {
               ),
             );
           },
-          backgroundSvg: eventBackgrounds2[event2.type] ?? 'lib/assets/icons/iconbackground_red.svg',
+          backgroundSvg: eventBackgrounds2[event2.type] ??
+              'lib/assets/icons/iconbackground_red.svg',
         ),
       ));
     }
@@ -211,11 +320,12 @@ class MapWidget extends StatelessWidget {
         center: LatLng(36.896951337741065, 30.688470309569553),
         zoom: 12.2,
         maxZoom: 17.0,
-        minZoom: 11.0,
+        minZoom: 8.0,
       ),
       children: [
         TileLayer(
-          urlTemplate: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+          urlTemplate:
+              "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
           subdomains: ['a', 'b', 'c'],
         ),
         PolylineLayer(

@@ -7,7 +7,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 File? _globalImage;
 
 class CustomDrawer extends StatelessWidget {
-
   const CustomDrawer({super.key});
 
   @override
