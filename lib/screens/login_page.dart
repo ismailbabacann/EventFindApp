@@ -1,10 +1,18 @@
 import 'package:eventfindapp/screens/mainpage.dart';
 import 'package:eventfindapp/screens/signup_page.dart';
+import 'package:eventfindapp/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
 
 class LoginPage extends StatelessWidget {
+
+  final _tEmail= TextEditingController();
+  final _tPassword = TextEditingController();
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +43,7 @@ class LoginPage extends StatelessWidget {
             ),
             SizedBox(height: 16),
             TextField(
+              controller: _tEmail,
               decoration: InputDecoration(
                 labelText: 'Email',
                 border: OutlineInputBorder(
@@ -42,7 +51,8 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16),
-            const TextField(
+             TextField(
+              controller: _tPassword,
               decoration: InputDecoration(
                 labelText: 'Şifre',
                 border: OutlineInputBorder(),
@@ -52,7 +62,7 @@ class LoginPage extends StatelessWidget {
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+                  AuthService().signIn(context, email: _tEmail.text, password: _tPassword.text);
               },
               child: Text('Giriş Yap' , style: TextStyle(color: Colors.white),),
               style: ElevatedButton.styleFrom(

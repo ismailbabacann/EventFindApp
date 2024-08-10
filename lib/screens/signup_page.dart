@@ -1,8 +1,16 @@
+import 'package:eventfindapp/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SignUpPage extends StatelessWidget {
+
+  final _tName = TextEditingController();
+  final _tSurname = TextEditingController();
+  final _tEmail= TextEditingController();
+  final _tPassword = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +43,7 @@ class SignUpPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 TextField(
+                  controller: _tName,
                   decoration: InputDecoration(
                     labelText: 'İsim',
                     border: OutlineInputBorder(),
@@ -42,6 +51,7 @@ class SignUpPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 TextField(
+                  controller: _tSurname,
                   decoration: InputDecoration(
                     labelText: 'Soyisim',
                     border: OutlineInputBorder(),
@@ -49,6 +59,7 @@ class SignUpPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 TextField(
+                  controller: _tEmail,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
@@ -56,6 +67,7 @@ class SignUpPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 TextField(
+                  controller: _tPassword,
                   decoration: InputDecoration(
                     labelText: 'Şifre',
                     border: OutlineInputBorder(),
@@ -65,7 +77,7 @@ class SignUpPage extends StatelessWidget {
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
-                    // Kaydolma işlemini çözücem burda
+                  AuthService().signUp(context ,name: _tName.text, surname: _tSurname.text, email: _tEmail.text, password: _tPassword.text);
                   },
                   child: Text('Kaydol' , style: TextStyle(color: Colors.white),),
                   style: ElevatedButton.styleFrom(
