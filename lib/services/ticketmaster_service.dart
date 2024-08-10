@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class TicketmasterService {
-  final String _apiKey = 'Sls17QfoeVelkJG2joYQ1Qb3BHv0apKJ';
+  final String _apiKey = 'Al3jtg0xd9ggJ8rwAXPmNbtkPj673JK1';
 
   Future<List<Event2>> getEvents() async {
     final String url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey=$_apiKey&city=Antalya';
@@ -46,24 +46,32 @@ class Event2 {
   });
 
   factory Event2.fromJson(Map<String, dynamic> json) {
-    // Resim URL'sini almak için önceki listedeki ilk resmi seçiyoruz aman burası önemli!!!
     var imageUrl = json['images'] != null && json['images'].isNotEmpty
         ? json['images'][0]['url']
         : '';
 
+    var venue = json['_embedded']?['venues'] != null && json['_embedded']['venues'].isNotEmpty
+        ? json['_embedded']['venues'][0]
+        : {};
+
+    var location = venue['location'] ?? {};
+
     return Event2(
-      name: json['name'],
-      location: json['_embedded']['venues'][0]['name'],
-      address: json['_embedded']['venues'][0]['address']['line1'] ?? 'Antalya,Konyaaltı',
-      latitude: double.parse(json['_embedded']['venues'][0]['location']['latitude']),
-      longitude: double.parse(json['_embedded']['venues'][0]['location']['longitude']),
-      type: json['classifications'][0]['segment']['name'],
-      genre: json['classifications'][0]['genre']['name'],
+      name: json['name'] ?? 'Unknown Name',
+      location: venue['name'] ?? 'Unknown Location',
+      address: venue['address']?['line1'] ?? 'Antalya, Konyaaltı',
+      latitude: location['latitude'] != null
+          ? double.parse(location['latitude'])
+          : 0.0,
+      longitude: location['longitude'] != null
+          ? double.parse(location['longitude'])
+          : 0.0,
+      type: json['classifications']?[0]['segment']['name'] ?? 'Unknown Type',
+      genre: json['classifications']?[0]['genre']['name'] ?? 'Unknown Genre',
       imageUrl: imageUrl,
-      localTime: json['dates']['start']['localTime'],
-      localDate: json['dates']['start']['localDate'],
-      url: json['_embedded']['venues'][0]['url'] ?? 'https://www.biletix.com/search/TURKIYE/tr?category_sb=-1&date_sb=-1&city_sb=Antalya#!city_sb:Antalya',
+      localTime: json['dates']['start']['localTime'] ?? 'Unknown Time',
+      localDate: json['dates']['start']['localDate'] ?? 'Unknown Date',
+      url: venue['url'] ?? 'https://www.biletix.com/search/TURKIYE/tr?category_sb=-1&date_sb=-1&city_sb=Antalya#!city_sb:Antalya',
     );
   }
 }
-
