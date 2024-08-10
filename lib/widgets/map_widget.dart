@@ -5,21 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:eventfindapp/models/event.dart';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class MapWidget extends StatelessWidget {
-  final List<Event1> events;
   final List<Event2> events2;
   final MapController mapController;
 
   MapWidget({
-    required this.events,
     required this.mapController,
-    super.key,
     required this.events2,
+    super.key,
   });
 
   void _launchGoogleMaps(double latitude, double longitude) async {
@@ -42,48 +38,6 @@ class MapWidget extends StatelessWidget {
     List<Marker> markers = [];
     List<Polyline> polylines = [];
 
-    Map<String, IconData> eventIcons1 = {
-      'school-holidays': Icons.school,
-      'public-holidays': Icons.holiday_village,
-      'observances': Icons.approval,
-      'politics': Icons.how_to_vote,
-      'conferences': Icons.account_balance,
-      'expos': Icons.stadium_sharp,
-      'concerts': Icons.music_note,
-      'festivals': Icons.festival,
-      'performing-arts': Icons.theater_comedy,
-      'sports': Icons.sports_tennis,
-      'community': Icons.people,
-      'daylight-savings': Icons.solar_power,
-      'airport-delays': Icons.connecting_airports,
-      'severe-weather': Icons.cloudy_snowing,
-      'disasters': Icons.volcano,
-      'terror': Icons.upcoming,
-      'health-warnings': Icons.curtains,
-      'academic': Icons.book,
-    };
-
-    Map<String, String> eventBackgrounds1 = {
-      'school-holidays': 'lib/assets/icons/iconbackground_blue.svg',
-      'public-holidays': 'lib/assets/icons/iconbackground_cyan.svg',
-      'observances': 'lib/assets/icons/iconbackground_darkblue.svg',
-      'politics': 'lib/assets/icons/iconbackground_red.svg',
-      'conferences': 'lib/assets/icons/iconbackground_cyan.svg',
-      'expos': 'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
-      'concerts': 'lib/assets/icons/iconbackground_red.svg',
-      'festivals': 'lib/assets/icons/iconbackground_cyan.svg',
-      'performing-arts': 'lib/assets/icons/iconbackground_blue.svg',
-      'sports': 'lib/assets/icons/iconbackground_blue.svg',
-      'community': 'lib/assets/icons/iconbackground_darkblue.svg',
-      'daylight-savings': 'lib/assets/icons/iconbackground_blue.svg',
-      'airport-delays': 'lib/assets/icons/iconbackground_green.svg',
-      'severe-weather': 'lib/assets/icons/iconbackground_red.svg',
-      'disasters': 'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
-      'terror': 'lib/assets/icons/iconbackground_cyan.svg',
-      'health-warnings': 'lib/assets/icons/iconbackground_blue.svg',
-      'academic': 'lib/assets/icons/iconbackground_darkblue.svg',
-    };
-
     Map<String, IconData> eventIcons2 = {
       'Music': Icons.music_note,
       'Undefined': Icons.camera_outlined,
@@ -95,67 +49,6 @@ class MapWidget extends StatelessWidget {
       'Undefined': 'lib/assets/icons/iconbackground_green.svg',
       'Arts & Theatre': 'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
     };
-
-    for (var event in events) {
-      try {
-        var location = event.location;
-        var type = event.category;
-
-        if (location.isNotEmpty && location[0] != null && location[1] != null) {
-          markers.add(
-            Marker(
-              width: 80.0,
-              height: 80.0,
-              point: LatLng(
-                (location[1] as num).toDouble(), // latitude
-                (location[0] as num).toDouble(), // longitude
-              ),
-              builder: (ctx) => CustomMarker(
-                icon: eventIcons1[type] ?? Icons.account_balance,
-                iconColor: Colors.white,
-                iconSize: 25.0,
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: ctx,
-                    builder: (context) => SingleChildScrollView(
-                      child: Container(
-                        color: Colors.white,
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              event.title,
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 8.0),
-                            Text(event.description),
-                            SizedBox(height: 16.0),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Kapat'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                backgroundSvg: eventBackgrounds1[type] ??
-                    'lib/assets/icons/iconbackground_red.svg',
-              ),
-            ),
-          );
-        }
-      } catch (e) {
-        print('Error processing event: $e');
-      }
-    }
 
     for (var event2 in events2) {
       markers.add(Marker(
@@ -380,14 +273,14 @@ class MapWidget extends StatelessWidget {
       mapController: mapController,
       options: MapOptions(
         center: LatLng(36.896951337741065, 30.688470309569553),
-        zoom: 12.2,
+        zoom: 11.5,
         maxZoom: 17.0,
         minZoom: 8.0,
       ),
       children: [
         TileLayer(
           urlTemplate:
-              "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+          "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
           subdomains: ['a', 'b', 'c'],
         ),
         PolylineLayer(
