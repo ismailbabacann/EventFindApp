@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "634179831432",
+    "project_id": "eventfindappticket",
+    "storage_bucket": "eventfindappticket.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634179831432:android:fa798cc53edd95063d813d",
+        "android_client_info": {
+          "package_name": "com.example.eventfindapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3nvJS0DyAgo5F8DFmwEW87l8m6rLLNXQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
