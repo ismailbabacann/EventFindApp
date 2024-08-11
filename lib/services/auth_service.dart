@@ -4,11 +4,46 @@ import 'package:eventfindapp/screens/mainpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 
 class AuthService{
 
+  final GoogleSignIn googleSignIn = GoogleSignIn();
   final userCollection=FirebaseFirestore.instance.collection("users");
   final firebaseAuth = FirebaseAuth.instance;
+
+  Future<void> signInWithGoogle(BuildContext context) async {
+    try {
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await firebaseAuth.signInWithCredential(credential);
+
+      if (userCredential.user != null) {
+        Fluttertoast.showToast(msg: "Google ile giriş başarılı! ", toastLength: Toast.LENGTH_LONG);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+      }
+    } on FirebaseAuthException catch (e) {
+      Fluttertoast.showToast(msg: e.message!, toastLength: Toast.LENGTH_LONG);
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Bir hata oluştu: $e", toastLength: Toast.LENGTH_LONG);
+    }
+  }
+
+
+
+
 
   Future<void> signUp(BuildContext context ,{required String name,required String surname, required String email , required String password}) async{
    try {

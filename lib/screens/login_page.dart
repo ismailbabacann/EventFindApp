@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
 
+
 class LoginPage extends StatelessWidget {
 
   final _tEmail= TextEditingController();
@@ -81,7 +82,7 @@ class LoginPage extends StatelessWidget {
             SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: () {
-                // Google ile giriş ayarlancak
+                AuthService().signInWithGoogle(context);
               },
               icon: SvgPicture.asset('lib/assets/icons/google_icon.svg', height: 18),
               label: Text(''),
