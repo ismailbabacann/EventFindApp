@@ -6,6 +6,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class MapWidget extends StatelessWidget {
@@ -19,16 +20,19 @@ class MapWidget extends StatelessWidget {
   });
 
   void _launchGoogleMaps(double latitude, double longitude) async {
-    final url = 'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude';
+    final url =
+        'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude';
     final Uri uri = Uri.parse(url);
-    if (!await launchUrlString(uri.toString(), mode: LaunchMode.externalApplication)) {
+    if (!await launchUrlString(uri.toString(),
+        mode: LaunchMode.externalApplication)) {
       throw 'Could not launch $url';
     }
   }
 
   void _launchURL(String urlString) async {
     final Uri url = Uri.parse(urlString);
-    if (!await launchUrlString(url.toString(), mode: LaunchMode.externalApplication)) {
+    if (!await launchUrlString(url.toString(),
+        mode: LaunchMode.externalApplication)) {
       throw 'Could not launch $urlString';
     }
   }
@@ -62,187 +66,225 @@ class MapWidget extends StatelessWidget {
           onPressed: () {
             showModalBottomSheet(
               backgroundColor: Colors.white,
+              shape: LinearBorder.top(),
               context: ctx,
-              builder: (ctx) => SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (event2.imageUrl.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Image.network(event2.imageUrl),
-                        ),
-                      SizedBox(height: 16.0),
-                      Text(
-                        event2.name,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        event2.type,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w200,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Column(
+              builder: (ctx) => Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset('lib/assets/icons/dateicon.svg'),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(event2.localDate),
-                                  Text(
-                                    event2.localTime,
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold,
+                          if (event2.imageUrl.isNotEmpty)
+                            Stack(
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  child: Image.network(
+                                    event2.imageUrl,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 16.0,
+                                  left: 16.0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,// Container'ın arka plan rengi
+                                      border: Border.all(
+                                        color: Colors.white, // Sınır rengi
+                                        width: 5.0, // Sınır kalınlığı
+                                      ),
+                                      borderRadius: BorderRadius.circular(15), // Köşeleri yuvarlatmak için
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          'lib/assets/icons/group.png',
+                                          height: 50,
+                                          width: 100,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          '+23 Gidiyor',
+                                          style: TextStyle(
+                                            color: mainColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(width: 12),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            final shareText =
+                                                '*Hey EnYakından etkinlik buldum! Beraber gidelim mi?*\n\n Etkinlik: ${event2.name}\nTarih: ${event2.localDate} ${event2.localTime}\n\nMekan: ${event2.location}\nAdres: ${event2.address}\nDaha fazla bilgi: ${event2.url}';
+                                            Share.share(shareText);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: mainColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(Icons.share, color: Colors.white),
+                                              SizedBox(width: 8),
+                                              Text(
+                                                'Davet et',
+                                                style: TextStyle(color: Colors.white),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+
                                     ),
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SvgPicture.asset(
-                                  'lib/assets/icons/locationicon.svg'),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(event2.location),
-                                  SizedBox(
-                                    width: 200,
-                                    child: Expanded(
-                                      child: Text(
-                                        event2.address,
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                ),
+                              ],
+                            ),
+                          SizedBox(height: 8.0),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      event2.name,
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
+                                    Text(
+                                      event2.type,
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w200,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.0),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SvgPicture.asset('lib/assets/icons/dateicon.svg'),
+                                          SizedBox(width: 10),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(event2.localDate),
+                                              Text(
+                                                event2.localTime,
+                                                style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          SvgPicture.asset('lib/assets/icons/locationicon.svg'),
+                                          SizedBox(width: 10),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(width: 200,child: Expanded(child: Text(event2.location))),
+                                              SizedBox(
+                                                width: 200,
+                                                child: Expanded(
+                                                  child: Text(
+                                                    event2.address,
+                                                    style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 20.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Stack(
-                                children: [
-                                  Image.asset(
-                                    'lib/assets/icons/group.png',
-                                    height: 50,
-                                    width: 100,
+                              ElevatedButton(
+                                onPressed: () {
+                                  _launchGoogleMaps(event2.latitude, event2.longitude);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: mainColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                ],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.map_outlined, color: Colors.white),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Yol Tarifi',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              SizedBox(width: 8),
-                              Text(
-                                '+23 Going',
-                                style: TextStyle(
-                                  color: mainColor, // Mor renk kodu
-                                  fontWeight: FontWeight.bold,
+                              ElevatedButton(
+                                onPressed: () {
+                                  _launchURL(event2.url);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: mainColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.airplane_ticket_outlined,
+                                        color: Colors.white),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Bilet Al',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                          Column(
-                            children: [
-                              Text("Katılımcıları görmek için " , style: TextStyle(fontSize: 10 , color: mainColor , fontWeight: FontWeight.bold),),
-                              SvgPicture.asset('lib/assets/icons/pro.svg' , height: 40, width: 40,),
-                            ],
-                          ),
                         ],
                       ),
-                      SizedBox(height: 30,),
-                      Row(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              _launchGoogleMaps(event2.latitude, event2.longitude);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: mainColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.map_outlined, color: Colors.white),
-                                SizedBox(width: 8), // İkon ile yazı arasındaki boşluk
-                                Text(
-                                  'Yol Tarifi',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 60,),
-                          ElevatedButton(
-                            onPressed: () {
-                              _launchURL(event2.url);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: mainColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.airplane_ticket_outlined, color: Colors.white),
-                                SizedBox(width: 8), // İkon ile yazı arasındaki boşluk
-                                Text(
-                                  'Bilet Al',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 50,),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Close'),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             );
+
+
           },
           backgroundSvg: eventBackgrounds2[event2.type] ??
               'lib/assets/icons/iconbackground_red.svg',
@@ -280,7 +322,7 @@ class MapWidget extends StatelessWidget {
       children: [
         TileLayer(
           urlTemplate:
-          "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+              "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
           subdomains: ['a', 'b', 'c'],
         ),
         PolylineLayer(
