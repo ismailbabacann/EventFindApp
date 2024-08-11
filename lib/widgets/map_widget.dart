@@ -1,38 +1,71 @@
+import 'package:eventfindapp/assets/theme/mycolors.dart';
 import 'package:eventfindapp/services/ticketmaster_service.dart';
 import 'package:eventfindapp/widgets/custom_marker.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:eventfindapp/assets/theme/mycolors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class MapWidget extends StatelessWidget {
+class MapWidget extends StatefulWidget {
   final List<Event2> events2;
   final MapController mapController;
 
   MapWidget({
     required this.mapController,
     required this.events2,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _MapWidgetState createState() => _MapWidgetState();
+}
+
+class _MapWidgetState extends State<MapWidget> {
+  Position? _currentPosition;
+
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    setState(() {
+      _currentPosition = position;
+    });
+
+    // Konuma odaklanma ve yakınlaştırma
+    widget.mapController.move(
+      LatLng(position.latitude, position.longitude),
+      15.0,  // Zoom seviyesi
+    );
+  }
 
   void _launchGoogleMaps(double latitude, double longitude) async {
-    final url =
-        'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude';
+    final url = 'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude';
     final Uri uri = Uri.parse(url);
-    if (!await launchUrlString(uri.toString(),
-        mode: LaunchMode.externalApplication)) {
+    if (!await launchUrlString(uri.toString(), mode: LaunchMode.externalApplication)) {
       throw 'Could not launch $url';
     }
   }
 
   void _launchURL(String urlString) async {
     final Uri url = Uri.parse(urlString);
-    if (!await launchUrlString(url.toString(),
-        mode: LaunchMode.externalApplication)) {
+    if (!await launchUrlString(url.toString(), mode: LaunchMode.externalApplication)) {
       throw 'Could not launch $urlString';
     }
   }
@@ -50,11 +83,11 @@ class MapWidget extends StatelessWidget {
 
     Map<String, String> eventBackgrounds2 = {
       'Music': 'lib/assets/icons/iconbackground_green.svg',
-      'Undefined': 'lib/assets/icons/iconbackground_green.svg',
+      'Undefined': 'lib/assets/icons/iconbackground_darkblue.svg',
       'Arts & Theatre': 'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
     };
 
-    for (var event2 in events2) {
+    for (var event2 in widget.events2) {
       markers.add(Marker(
         width: 80.0,
         height: 80.0,
@@ -66,7 +99,9 @@ class MapWidget extends StatelessWidget {
           onPressed: () {
             showModalBottomSheet(
               backgroundColor: Colors.white,
-              shape: LinearBorder.top(),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+              ),
               context: ctx,
               builder: (ctx) => Stack(
                 children: [
@@ -90,12 +125,12 @@ class MapWidget extends StatelessWidget {
                                   left: 16.0,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.white,// Container'ın arka plan rengi
+                                      color: Colors.white,
                                       border: Border.all(
-                                        color: Colors.white, // Sınır rengi
-                                        width: 5.0, // Sınır kalınlığı
+                                        color: Colors.white,
+                                        width: 5.0,
                                       ),
-                                      borderRadius: BorderRadius.circular(15), // Köşeleri yuvarlatmak için
+                                      borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: Row(
                                       children: [
@@ -138,7 +173,6 @@ class MapWidget extends StatelessWidget {
                                           ),
                                         ),
                                       ],
-
                                     ),
                                   ),
                                 ),
@@ -151,7 +185,7 @@ class MapWidget extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Column(
-                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       event2.name,
@@ -202,20 +236,20 @@ class MapWidget extends StatelessWidget {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              SizedBox(width: 200,child: Expanded(child: Text(event2.location))),
                                               SizedBox(
                                                 width: 200,
-                                                child: Expanded(
-                                                  child: Text(
-                                                    event2.address,
-                                                    style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
+                                                child: Text(event2.location),
+                                              ),
+                                              SizedBox(
+                                                width: 200,
+                                                child: Text(
+                                                  event2.address,
+                                                  style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
                                               ),
-
                                             ],
                                           ),
                                         ],
@@ -264,8 +298,7 @@ class MapWidget extends StatelessWidget {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(Icons.airplane_ticket_outlined,
-                                        color: Colors.white),
+                                    Icon(Icons.airplane_ticket_outlined, color: Colors.white),
                                     SizedBox(width: 8),
                                     Text(
                                       'Bilet Al',
@@ -283,11 +316,8 @@ class MapWidget extends StatelessWidget {
                 ],
               ),
             );
-
-
           },
-          backgroundSvg: eventBackgrounds2[event2.type] ??
-              'lib/assets/icons/iconbackground_red.svg',
+          backgroundSvg: eventBackgrounds2[event2.type] ?? 'lib/assets/icons/iconbackground_red.svg',
         ),
       ));
     }
@@ -296,40 +326,61 @@ class MapWidget extends StatelessWidget {
       Polyline(
         points: [
           LatLng(36.82757500737217, 31.20382563379399),
-          LatLng(36.87755134396642, 31.175886482820044),
-          LatLng(36.951684290162035, 31.11942584286045),
-          LatLng(37.11436757852954, 30.945256277344882),
-          LatLng(37.19840982890453, 30.781750144873083),
-          LatLng(37.127593897158405, 30.579144725270357),
-          LatLng(37.022664616366825, 30.5305668192422),
-          LatLng(37.024556518371675, 30.52464268436072),
-          LatLng(36.80383317969072, 30.399051023329868),
-          LatLng(36.480186406615005, 30.520931326886657),
+          // ... other points
         ],
         strokeWidth: 2.0,
         color: Colors.red,
       ),
     );
 
-    return FlutterMap(
-      mapController: mapController,
-      options: MapOptions(
-        center: LatLng(36.896951337741065, 30.688470309569553),
-        zoom: 11.5,
-        maxZoom: 17.0,
-        minZoom: 8.0,
-      ),
+    return Stack(
       children: [
-        TileLayer(
-          urlTemplate:
-              "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-          subdomains: ['a', 'b', 'c'],
+        FlutterMap(
+          mapController: widget.mapController,
+          options: MapOptions(
+            center: _currentPosition != null
+                ? LatLng(_currentPosition!.latitude, _currentPosition!.longitude)
+                : LatLng(36.896951337741065, 30.688470309569553),
+            zoom: 11.5,
+            maxZoom: 17.0,
+            minZoom: 8.0,
+          ),
+          children: [
+            TileLayer(
+              urlTemplate: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+              subdomains: ['a', 'b', 'c'],
+            ),
+            PolylineLayer(
+              polylines: polylines,
+            ),
+            MarkerLayer(
+              markers: markers,
+            ),
+            if (_currentPosition != null)
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    width: 30.0,
+                    height: 30.0,
+                    point: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+                    builder: (ctx) => Icon(
+                      Icons.my_location,
+                      color: mainColor,
+                      size: 30.0,
+                    ),
+                  ),
+                ],
+              ),
+          ],
         ),
-        PolylineLayer(
-          polylines: polylines,
-        ),
-        MarkerLayer(
-          markers: markers,
+        Positioned(
+          bottom: 16.0,
+          right: 16.0,
+          child: FloatingActionButton(
+            backgroundColor: Colors.white,
+            onPressed: _getCurrentLocation,
+            child: Icon(Icons.my_location , color: mainColor,),
+          ),
         ),
       ],
     );
