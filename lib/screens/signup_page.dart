@@ -1,15 +1,13 @@
-import 'package:eventfindapp/services/auth_service.dart';
+import 'package:eventfindapp/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SignUpPage extends StatelessWidget {
-
   final _tName = TextEditingController();
   final _tSurname = TextEditingController();
-  final _tEmail= TextEditingController();
+  final _tEmail = TextEditingController();
   final _tPassword = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +74,28 @@ class SignUpPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () {
-                  AuthService().signUp(context ,name: _tName.text, surname: _tSurname.text, email: _tEmail.text, password: _tPassword.text);
+                  onPressed: () async {
+                    String name = _tName.text.trim();
+                    String surname = _tSurname.text.trim();
+                    String email = _tEmail.text.trim();
+                    String password = _tPassword.text.trim();
+
+                    bool success = await SupabaseService.signUpWithEmail(name, surname, email, password);
+
+                    if (success) {
+                      // Başarılı kayıt, giriş sayfasına yönlendirme yapabilirsiniz
+                      Navigator.pushReplacementNamed(context, '/login');
+                    } else {
+                      // Başarısız kayıt, hata mesajı gösterme
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Kayıt başarısız, bilgilerinizi kontrol edin.')),
+                      );
+                    }
                   },
-                  child: Text('Kaydol' , style: TextStyle(color: Colors.white),),
+                  child: Text(
+                    'Kaydol',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: mainColor,
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),

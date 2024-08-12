@@ -1,4 +1,5 @@
 import 'package:eventfindapp/assets/theme/mycolors.dart';
+import 'package:eventfindapp/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:eventfindapp/services/auth_service.dart';
 import 'package:eventfindapp/screens/password_change_page.dart';
@@ -65,25 +66,28 @@ class PasswordChangePage extends StatelessWidget {
               ),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  if (_tNewPassword.text == _tConfirmPassword.text) {
-                    AuthService().changePassword(
-                      oldPassword: _tOldPassword.text,
-                      newPassword: _tNewPassword.text,
-                      context: context,
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Yeni şifreler eşleşmiyor.')),
-                    );
-                  }
-                },
                 child: Text('Şifreyi Değiştir',
                     style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: mainColor,
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                ),
+                ), onPressed: () {
+                  /*
+                if (_tNewPassword.text == _tConfirmPassword.text) {
+                  SupabaseService().changePassword(
+                    context,
+                    oldPassword: _tOldPassword.text,
+                    newPassword: _tNewPassword.text,
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Yeni şifreler eşleşmiyor.')),
+                  );
+                }
+
+                   */
+
+              },
               ),
               SizedBox(height: 30,),
               ClipRRect(

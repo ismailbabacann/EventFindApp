@@ -1,14 +1,11 @@
-import 'package:eventfindapp/screens/mainpage.dart';
 import 'package:eventfindapp/screens/signup_page.dart';
-import 'package:eventfindapp/services/auth_service.dart';
+import 'package:eventfindapp/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
 
-
 class LoginPage extends StatelessWidget {
-
-  final _tEmail= TextEditingController();
+  final _tEmail = TextEditingController();
   final _tPassword = TextEditingController();
 
   @override
@@ -21,7 +18,7 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 100,),
+              SizedBox(height: 100),
               SvgPicture.asset(
                 'lib/assets/icons/logo_enyakın.svg',
                 height: 50,
@@ -46,12 +43,11 @@ class LoginPage extends StatelessWidget {
                 controller: _tEmail,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  border: OutlineInputBorder(
-                  ),
+                  border: OutlineInputBorder(),
                 ),
               ),
               SizedBox(height: 16),
-               TextField(
+              TextField(
                 controller: _tPassword,
                 decoration: InputDecoration(
                   labelText: 'Şifre',
@@ -61,10 +57,26 @@ class LoginPage extends StatelessWidget {
               ),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                    AuthService().signIn(context, email: _tEmail.text, password: _tPassword.text);
+                onPressed: () async {
+                  String email = _tEmail.text.trim();
+                  String password = _tPassword.text.trim();
+
+                  bool success = await SupabaseService.signInWithEmail(email, password);
+
+                  if (success) {
+                    // Başarılı giriş, anasayfaya yönlendirme yapabilirsiniz
+                    Navigator.pushReplacementNamed(context, '/home');
+                  } else {
+                    // Başarısız giriş, hata mesajı gösterme
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Giriş başarısız, bilgilerinizi kontrol edin.')),
+                    );
+                  }
                 },
-                child: Text('Giriş Yap' , style: TextStyle(color: Colors.white),),
+                child: Text(
+                  'Giriş Yap',
+                  style: TextStyle(color: Colors.white),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: mainColor,
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
@@ -80,8 +92,23 @@ class LoginPage extends StatelessWidget {
               ),
               SizedBox(height: 16),
               ElevatedButton.icon(
-                onPressed: () {
-                  AuthService().signInWithGoogle(context);
+                onPressed: () async {
+
+                  /*
+                  bool success = await SupabaseService.signInWithGoogle();
+                  if (success) {
+                    // Başarılı Google ile giriş, anasayfaya yönlendirme yapabilirsiniz
+                    Navigator.pushReplacementNamed(context, '/home');
+                  } else {
+                    // Başarısız giriş, hata mesajı gösterme
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Google ile giriş başarısız, lütfen tekrar deneyin.')),
+                    );
+                  }
+                  */
+
+
+
                 },
                 icon: SvgPicture.asset('lib/assets/icons/google_icon.svg', height: 18),
                 label: Text(''),
@@ -94,7 +121,7 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 16),
               Text(
                 'Giriş yap’a tıklayarak enYakın Hizmet Şartlarımızı ve Gizlilik Politikamızı kabul etmiş olursunuz.',
-                style: TextStyle(fontSize: 12 , color: Colors.blueGrey),
+                style: TextStyle(fontSize: 12, color: Colors.blueGrey),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 16),
