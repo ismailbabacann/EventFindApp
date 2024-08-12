@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:eventfindapp/assets/theme/mycolors.dart';
 import 'package:eventfindapp/screens/password_change_page.dart';
 import 'package:eventfindapp/screens/savedevents_page.dart';
 import 'package:flutter/material.dart';
@@ -24,66 +25,48 @@ class CustomDrawer extends StatelessWidget {
             ),
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage: _globalImage != null
-                      ? FileImage(_globalImage!)
-                      : const NetworkImage('https://via.placeholder.com/150') as ImageProvider,
-                ),
-                const SizedBox(height: 16),
-                const Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Text(
-                    'İsmail Babacan',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                    ),
+                SizedBox(height: 50,),
+                Center(
+                  child: SvgPicture.asset(
+                    'lib/assets/icons/logo_enyakın.svg',
+                    height: 60.0,
+                    fit: BoxFit.cover,
                   ),
                 ),
+                const SizedBox(height: 16),
               ],
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.co_present_rounded , color: Colors.grey,),
-            title: const Text('Profil' , style: TextStyle(fontWeight: FontWeight.bold),),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.bookmark , color: Colors.grey,),
-            title: const Text('Ayarlar' ,  style: TextStyle(fontWeight: FontWeight.bold)),
+            leading:  Icon(Icons.bookmark , color: mainColor  ),
+            title:  Text('Kaydedilen Etkinlikler' ,  style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SavedEventsPage()));
             },
           ),
           ListTile(
-            leading: const Icon(Icons.warning_rounded , color: Colors.grey,),
+            leading:  Icon(Icons.warning_rounded , color: mainColor,),
             title: const Text('Destek' ,  style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: const Icon(Icons.warning_rounded , color: Colors.grey,),
+            leading:  Icon(Icons.warning_rounded , color: mainColor),
             title: const Text('Kılavuz' ,  style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: const Icon(Icons.settings , color: Colors.grey,),
+            leading:  Icon(Icons.settings , color: mainColor,),
             title: const Text('Şifreyi Değiştir' ,  style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => PasswordChangePage() ));
             },
           ),
           ListTile(
-            leading: const Icon(Icons.exit_to_app , color: Colors.grey,),
+            leading:  Icon(Icons.exit_to_app , color: mainColor,),
             title: const Text('Çıkış Yap' ,  style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
