@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:eventfindapp/screens/password_change_page.dart';
+import 'package:eventfindapp/screens/savedevents_page.dart';
 import 'package:flutter/material.dart';
 import 'package:eventfindapp/screens/profile_page.dart';
 import 'package:eventfindapp/screens/login_page.dart';
@@ -57,7 +58,7 @@ class CustomDrawer extends StatelessWidget {
             leading: const Icon(Icons.bookmark , color: Colors.grey,),
             title: const Text('Ayarlar' ,  style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SavedEventsPage()));
             },
           ),
           ListTile(

@@ -1,4 +1,5 @@
 import 'package:eventfindapp/assets/theme/mycolors.dart';
+import 'package:eventfindapp/services/savedevents_service.dart';
 import 'package:eventfindapp/services/ticketmaster_service.dart';
 import 'package:eventfindapp/widgets/custom_marker.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,28 @@ class MapWidget extends StatefulWidget {
 }
 
 class _MapWidgetState extends State<MapWidget> {
+
+
+  final SavedEventsService _savedEventsService = SavedEventsService();
   Position? _currentPosition;
+
+
+  void _saveEvent(Event2 event) async {
+    final eventData = {
+      'name': event.name,
+      'type': event.type,
+      'location': event.location,
+      'address': event.address,
+      'localDate': event.localDate,
+      'localTime': event.localTime,
+      'latitude': event.latitude,
+      'longitude': event.longitude,
+    };
+
+    await _savedEventsService.saveEvent(eventData);
+  }
+
+
 
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
@@ -187,6 +209,26 @@ class _MapWidgetState extends State<MapWidget> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    ElevatedButton(
+                                      onPressed: () => _saveEvent(event2),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: mainColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(Icons.save, color: Colors.white),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'Kaydet',
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                     Text(
                                       event2.name,
                                       style: TextStyle(
