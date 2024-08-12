@@ -1,44 +1,26 @@
 {
   "project_info": {
-    "project_number": "634179831432",
-    "project_id": "eventfindappticket",
-    "storage_bucket": "eventfindappticket.appspot.com"
+    "project_number": "865953111915",
+    "project_id": "eventfindapp-cc496",
+    "storage_bucket": "eventfindapp-cc496.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:634179831432:android:fa798cc53edd95063d813d",
+        "mobilesdk_app_id": "1:865953111915:android:aff596b71393b113aeb62e",
         "android_client_info": {
           "package_name": "com.example.eventfindapp"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "634179831432-len5m6hc5r2fc4iegeo16cnjhrc0jas1.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.eventfindapp",
-            "certificate_hash": "55521071d59664df0f5b42d0e236db96eb6d2fd3"
-          }
-        },
-        {
-          "client_id": "634179831432-gvcj6g8td8o1f5t99tfqnmv55hvr4brq.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD3nvJS0DyAgo5F8DFmwEW87l8m6rLLNXQ"
+          "current_key": "AIzaSyC18RfC-Kru_g0Bdb-8yRAjrYFsuNes4to"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "634179831432-gvcj6g8td8o1f5t99tfqnmv55hvr4brq.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

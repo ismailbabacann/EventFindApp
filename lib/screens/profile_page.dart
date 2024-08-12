@@ -1,3 +1,4 @@
+import 'package:eventfindapp/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -6,23 +7,53 @@ class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
-File? _globalImage;
 
 class _ProfilePageState extends State<ProfilePage> {
-  final _nameController = TextEditingController(text: 'İsmail Babacan');
-  final _aboutController = TextEditingController(
-      text:
-      'En sevdiğiniz yemeğin tadını çıkarın ve arkadaşlarınız ve ailenizle güzel vakit geçirin. Harika vakit geçirin. Yerel gıda kamyonlarından yiyecek satın alınabilecektir.');
-  List<String> _interests = ['Others'];
-  List<String> _allInterests = ['Games Online', 'Concert', 'Music', 'Art', 'Movie', 'Others', 'Travel', 'Books', 'Sports'];
+  final AuthService _authService = AuthService();
+  final _nameController = TextEditingController();
+  final _aboutController = TextEditingController();
+  File? _selectedImage;
+  String? _profileImageUrl;
+  List<String> _interests = [];
+  List<String> _allInterests = [
+    'Games Online', 'Concert', 'Music', 'Art', 'Movie', 'Others', 'Travel', 'Books', 'Sports'
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    var profileData = await _authService.getUserProfile();
+    if (profileData != null) {
+      setState(() {
+        _nameController.text = "${profileData['name']} ${profileData['surname']}";
+        _aboutController.text = profileData['about'] ?? '';
+        _interests = List<String>.from(profileData['interests'] ?? []);
+        _profileImageUrl = profileData['profileImage'];
+      });
+    }
+  }
 
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
-        _globalImage = File(pickedFile.path);
+        _selectedImage = File(pickedFile.path);
       }
     });
+
+    if (_selectedImage != null) {
+      String? downloadUrl = await _authService.uploadProfileImage(_selectedImage!);
+      if (downloadUrl != null) {
+        await _authService.updateProfileImage(downloadUrl);
+        setState(() {
+          _profileImageUrl = downloadUrl;
+        });
+      }
+    }
   }
 
   void _editProfile() {
@@ -74,7 +105,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   }).toList(),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    List<String> names = _nameController.text.split(' ');
+                    await _authService.updateProfile(
+                      names[0],
+                      names.length > 1 ? names.sublist(1).join(' ') : '',
+                      _aboutController.text,
+                      _interests,
+                    );
                     Navigator.pop(context);
                     setState(() {});
                   },
@@ -112,9 +150,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 onTap: _pickImage,
                 child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: _globalImage != null
-                      ? FileImage(_globalImage!)
-                      : const NetworkImage('https://via.placeholder.com/150') as ImageProvider,
+                  backgroundImage: _profileImageUrl != null
+                      ? NetworkImage(_profileImageUrl!)
+                      : _selectedImage != null
+                      ? FileImage(_selectedImage!) as ImageProvider
+                      : const NetworkImage('https://via.placeholder.com/150'),
                   child: const Align(
                     alignment: Alignment.bottomRight,
                     child: Icon(Icons.change_circle, color: Colors.black),

@@ -22,6 +22,7 @@ def flutterVersionName = localProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
+
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
@@ -45,6 +46,7 @@ android {
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
+
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
@@ -53,6 +55,7 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
+
     buildTypes {
         release {
             signingConfig = signingConfigs.release
@@ -68,15 +71,9 @@ flutter {
 }
 
 dependencies {
-    // Import the Firebase BoM (Bill of Materials)
     implementation platform('com.google.firebase:firebase-bom:33.1.2')
-
-    // Add Firebase Analytics
-    implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.android.gms:play-services-auth:20.7.0' // En son sürümü kontrol edin
-
-    // Add the dependencies for any other desired Firebase products
-    // For example: implementation 'com.google.firebase:firebase-auth'
-    // You can find more libraries at https://firebase.google.com/docs/android/setup#available-libraries
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
 }
