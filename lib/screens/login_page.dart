@@ -1,3 +1,4 @@
+import 'package:eventfindapp/screens/mainpage.dart';
 import 'package:eventfindapp/screens/signup_page.dart';
 import 'package:eventfindapp/services/supabase_service.dart';
 import 'package:flutter/material.dart';
@@ -58,14 +59,11 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () async {
-                  String email = _tEmail.text.trim();
-                  String password = _tPassword.text.trim();
-
-                  bool success = await SupabaseService.signInWithEmail(email, password);
+                  bool success = await SupabaseService.signInWithEmail(_tEmail.text,  _tPassword.text);
 
                   if (success) {
                     // Başarılı giriş, anasayfaya yönlendirme yapabilirsiniz
-                    Navigator.pushReplacementNamed(context, '/home');
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage() ));
                   } else {
                     // Başarısız giriş, hata mesajı gösterme
                     ScaffoldMessenger.of(context).showSnackBar(

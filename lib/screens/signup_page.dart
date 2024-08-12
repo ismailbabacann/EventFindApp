@@ -1,3 +1,4 @@
+import 'package:eventfindapp/screens/mainpage.dart';
 import 'package:eventfindapp/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
@@ -84,7 +85,7 @@ class SignUpPage extends StatelessWidget {
 
                     if (success) {
                       // Başarılı kayıt, giriş sayfasına yönlendirme yapabilirsiniz
-                      Navigator.pushReplacementNamed(context, '/login');
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage() ));
                     } else {
                       // Başarısız kayıt, hata mesajı gösterme
                       ScaffoldMessenger.of(context).showSnackBar(

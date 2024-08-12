@@ -3,7 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupabaseService {
   static SupabaseClient _supabaseClient = Supabase.instance.client;
 
-  // Email ile giriş yap
+  // Email ile giriş ya
   static Future<bool> signInWithEmail(String email, String password) async {
     try {
       final response = await _supabaseClient.auth.signInWithPassword(
@@ -16,7 +16,6 @@ class SupabaseService {
       return false;
     }
   }
-
 
   /*
   // Google ile giriş yap
