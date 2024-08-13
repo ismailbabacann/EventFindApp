@@ -1,4 +1,3 @@
-import 'package:eventfindapp/screens/mainpage.dart';
 import 'package:eventfindapp/screens/signup_page.dart';
 import 'package:eventfindapp/services/auth_service.dart';
 import 'package:flutter/material.dart';

@@ -32,23 +32,6 @@ class _MapWidgetState extends State<MapWidget> {
   Position? _currentPosition;
 
 
-  void _saveEvent(Event2 event) async {
-    final eventData = {
-      'name': event.name,
-      'type': event.type,
-      'location': event.location,
-      'address': event.address,
-      'localDate': event.localDate,
-      'localTime': event.localTime,
-      'latitude': event.latitude,
-      'longitude': event.longitude,
-    };
-
-    await _savedEventsService.saveEvent(event);
-  }
-
-
-
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -494,7 +477,7 @@ class _MapWidgetState extends State<MapWidget> {
                 : LatLng(36.896951337741065, 30.688470309569553),
             zoom: 11.5,
             maxZoom: 17.0,
-            minZoom: 8.0,
+            minZoom: 9.5,
           ),
           children: [
             TileLayer(
