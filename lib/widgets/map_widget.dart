@@ -43,7 +43,7 @@ class _MapWidgetState extends State<MapWidget> {
       'longitude': event.longitude,
     };
 
-    await _savedEventsService.saveEvent(eventData);
+    await _savedEventsService.saveEvent(event);
   }
 
 
@@ -163,7 +163,7 @@ class _MapWidgetState extends State<MapWidget> {
                                         ),
                                         SizedBox(width: 8),
                                         Text(
-                                          '+23 Gidiyor',
+                                          '+? Gidiyor',
                                           style: TextStyle(
                                             color: mainColor,
                                             fontWeight: FontWeight.bold,
@@ -202,33 +202,53 @@ class _MapWidgetState extends State<MapWidget> {
                             ),
                           SizedBox(height: 8.0),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: EdgeInsets.all(16.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ElevatedButton(
-                                      onPressed: () => _saveEvent(event2),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: mainColor,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(Icons.save, color: Colors.white),
-                                          SizedBox(width: 8),
-                                          Text(
-                                            'Kaydet',
-                                            style: TextStyle(color: Colors.white),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(child: Text("Gidecek misin? Kaydet!\nEtkinlik yaklaştığında bildirim al!" , style: TextStyle(color: Colors.blueGrey, fontSize: 12))),
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            final isSaved = await SavedEventsService().isEventSaved(event2);
+
+                                            if (isSaved) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Text('Etkinlik zaten kayıtlı!'),
+                                                ),
+                                              );
+                                            } else {
+                                              await SavedEventsService().saveEvent(event2);
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Text('Kaydedilen etkinliklere eklendi! Yaklaştığında bildirim alacaksın!'),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            surfaceTintColor: mainColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(50),
+                                            ),
                                           ),
-                                        ],
-                                      ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(Icons.plus_one, color: mainColor),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                    SizedBox(height: 20,),
                                     Text(
                                       event2.name,
                                       style: TextStyle(
