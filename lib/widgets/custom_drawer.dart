@@ -3,9 +3,10 @@ import 'package:eventfindapp/assets/theme/mycolors.dart';
 import 'package:eventfindapp/screens/password_change_page.dart';
 import 'package:eventfindapp/screens/savedevents_page.dart';
 import 'package:flutter/material.dart';
-import 'package:eventfindapp/screens/profile_page.dart';
+import 'package:eventfindapp/screens/pro_page.dart';
 import 'package:eventfindapp/screens/login_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 
 File? _globalImage;
 
@@ -70,6 +71,13 @@ class CustomDrawer extends StatelessWidget {
             title: const Text('Çıkış Yap' ,  style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+            },
+
+          ),
+          ListTile(
+            leading:  SvgPicture.asset('lib/assets/icons/pro.svg'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ProPage()));
             },
           ),
           SizedBox(height: 60,),
