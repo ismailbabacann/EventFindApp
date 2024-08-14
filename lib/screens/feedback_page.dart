@@ -22,7 +22,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFFAFEFF),
       appBar: AppBar(
         backgroundColor: mainColor,
         title: Text('Destek', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
@@ -83,6 +83,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 backgroundColor: mainColor,
               ),
             ),
+            SizedBox(height: 50,),
             Image.asset('lib/assets/icons/image 87 (1).png'),
           ],
         ),

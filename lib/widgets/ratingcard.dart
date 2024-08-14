@@ -1,3 +1,6 @@
+import 'package:eventfindapp/assets/theme/mycolors.dart';
+import 'package:eventfindapp/screens/pro_page.dart';
+import 'package:eventfindapp/services/savedevents_service.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eventfindapp/services/ticketmaster_service.dart';
@@ -38,10 +41,12 @@ class CarouselSliderWidget extends StatelessWidget {
     }
   }
 
-  void _showEventDetails(BuildContext context, Event2 event) {
+  void _showEventDetails(BuildContext context, Event2 event2) {
     showModalBottomSheet(
       backgroundColor: Colors.white,
-      shape: LinearBorder.top(),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+      ),
       context: context,
       builder: (ctx) => Stack(
         children: [
@@ -50,13 +55,13 @@ class CarouselSliderWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (event.imageUrl.isNotEmpty)
+                  if (event2.imageUrl.isNotEmpty)
                     Stack(
                       children: [
                         Container(
                           width: double.infinity,
                           child: Image.network(
-                            event.imageUrl,
+                            event2.imageUrl,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -74,28 +79,40 @@ class CarouselSliderWidget extends StatelessWidget {
                             ),
                             child: Row(
                               children: [
-                                Image.asset(
-                                  'lib/assets/icons/group.png',
-                                  height: 50,
-                                  width: 100,
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  '+23 Gidiyor',
-                                  style: TextStyle(
-                                    color: Color(0xFF6B7AED),
-                                    fontWeight: FontWeight.bold,
+                                GestureDetector(
+                                  onDoubleTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => ProPage()),
+                                    );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        'lib/assets/icons/group.png',
+                                        height: 50,
+                                        width: 100,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        '+ ? Gidiyor',
+                                        style: TextStyle(
+                                          color: mainColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 SizedBox(width: 12),
                                 ElevatedButton(
                                   onPressed: () {
                                     final shareText =
-                                        '*Hey EnYakından etkinlik buldum! Beraber gidelim mi?*\n\n Etkinlik: ${event.name}\nTarih: ${event.localDate} ${event.localTime}\n\nMekan: ${event.location}\nAdres: ${event.address}\nDaha fazla bilgi: ${event.url}';
+                                        '*Hey EnYakından etkinlik buldum! Beraber gidelim mi?*\n\n Etkinlik: ${event2.name}\nTarih: ${event2.localDate} ${event2.localTime}\n\nMekan: ${event2.location}\nAdres: ${event2.address}\nDaha fazla bilgi: ${event2.url}';
                                     Share.share(shareText);
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color(0xFF6B7AED),
+                                    backgroundColor: mainColor,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -120,123 +137,196 @@ class CarouselSliderWidget extends StatelessWidget {
                     ),
                   SizedBox(height: 8.0),
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          event.name,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          event.type,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w200,
-                          ),
-                        ),
-                        SizedBox(height: 8.0),
-                        Row(
-                          children: [
-                            SvgPicture.asset('lib/assets/icons/dateicon.svg'),
-                            SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(event.localDate),
-                                Text(
-                                  event.localTime,
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        Row(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SvgPicture.asset('lib/assets/icons/locationicon.svg'),
-                            SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                SizedBox(width: 200,child: Expanded(child: Text(event.location))),
-                                SizedBox(
-                                  width: 200,
-                                  child: Expanded(
-                                    child: Text(
-                                      event.address,
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                Expanded(
+                                  child: Text(
+                                    "Gidecek misin? Kaydet!\nEtkinlik yaklaştığında bildirim al!",
+                                    style: TextStyle(color: Colors.blueGrey, fontSize: 12),
                                   ),
                                 ),
-
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    final isSaved = await SavedEventsService().isEventSaved(event2);
+                                    String title;
+                                    String content;
+                                    if (isSaved) {
+                                      title = 'UYARI';
+                                      content = 'Etkinlik zaten kayıtlı!';
+                                    } else {
+                                      title = 'HATIRLATMA';
+                                      content = 'Kaydedilen etkinliklere eklendi! Yaklaştığında bildirim alacaksın!';
+                                      await SavedEventsService().saveEvent(event2);
+                                    }
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          icon: Icon(Icons.crisis_alert),
+                                          backgroundColor: Colors.white,
+                                          title: Text(title , style: TextStyle(color: mainColor),),
+                                          content: Text(content),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Tamam' , style: TextStyle(color: mainColor),),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    surfaceTintColor: mainColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.plus_one, color: mainColor),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
+                            SizedBox(height: 20,),
+                            Text(
+                              event2.name,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              event2.type,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w200,
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
                           ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  SvgPicture.asset('lib/assets/icons/dateicon.svg'),
+                                  SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(event2.localDate),
+                                      Text(
+                                        event2.localTime,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SvgPicture.asset('lib/assets/icons/locationicon.svg'),
+                                  SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 200,
+                                        child: Text(event2.location),
+                                      ),
+                                      SizedBox(
+                                        width: 200,
+                                        child: Text(
+                                          event2.address,
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 20.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          _launchGoogleMaps(event.latitude, event.longitude);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF6B7AED),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            _launchGoogleMaps(event2.latitude, event2.longitude);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.map_outlined, color: Colors.white),
+                              SizedBox(width: 8),
+                              Text(
+                                'Yol Tarifi',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
                           ),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.map_outlined, color: Colors.white),
-                            SizedBox(width: 8),
-                            Text(
-                              'Yol Tarifi',
-                              style: TextStyle(color: Colors.white),
+                        ElevatedButton(
+                          onPressed: () {
+                            _launchURL(event2.url);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          ],
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          _launchURL(event.url);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF6B7AED),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.airplane_ticket_outlined, color: Colors.white),
+                              SizedBox(width: 8),
+                              Text(
+                                'Bilet Al',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
                           ),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.airplane_ticket_outlined, color: Colors.white),
-                            SizedBox(width: 8),
-                            Text(
-                              'Bilet Al',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

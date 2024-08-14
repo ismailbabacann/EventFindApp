@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
+import 'package:eventfindapp/screens/feedback_page.dart';
 import 'package:eventfindapp/screens/onboarding_page.dart';
 import 'package:eventfindapp/screens/password_change_page.dart';
 import 'package:eventfindapp/screens/savedevents_page.dart';
@@ -54,6 +55,13 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading:  Icon(Icons.warning_rounded , color: mainColor),
+            title: const Text('Destek' ,  style: TextStyle(fontWeight: FontWeight.bold)),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FeedbackPage()));
+            },
+          ),
+          ListTile(
             leading:  Icon(Icons.settings , color: mainColor,),
             title: const Text('Şifreyi Değiştir' ,  style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
@@ -66,7 +74,6 @@ class CustomDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
             },
-
           ),
           ListTile(
             leading:  SvgPicture.asset('lib/assets/icons/pro.svg'),
@@ -74,7 +81,7 @@ class CustomDrawer extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context) => ProPage()));
             },
           ),
-          SizedBox(height: 60,),
+          SizedBox(height: 40,),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

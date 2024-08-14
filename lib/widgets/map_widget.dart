@@ -258,25 +258,44 @@ class _MapWidgetState extends State<MapWidget> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Expanded(child: Text("Gidecek misin? Kaydet!\nEtkinlik yaklaştığında bildirim al!" , style: TextStyle(color: Colors.blueGrey, fontSize: 12))),
+                                        Expanded(
+                                          child: Text(
+                                            "Gidecek misin? Kaydet!\nEtkinlik yaklaştığında bildirim al!",
+                                            style: TextStyle(color: Colors.blueGrey, fontSize: 12),
+                                          ),
+                                        ),
                                         ElevatedButton(
                                           onPressed: () async {
                                             final isSaved = await SavedEventsService().isEventSaved(event2);
-
+                                            String title;
+                                            String content;
                                             if (isSaved) {
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(
-                                                  content: Text('Etkinlik zaten kayıtlı!'),
-                                                ),
-                                              );
+                                              title = 'UYARI';
+                                              content = 'Etkinlik zaten kayıtlı!';
                                             } else {
+                                              title = 'HATIRLATMA';
+                                              content = 'Kaydedilen etkinliklere eklendi! Yaklaştığında bildirim alacaksın!';
                                               await SavedEventsService().saveEvent(event2);
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(
-                                                  content: Text('Kaydedilen etkinliklere eklendi! Yaklaştığında bildirim alacaksın!'),
-                                                ),
-                                              );
                                             }
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  icon: Icon(Icons.crisis_alert),
+                                                  backgroundColor: Colors.white,
+                                                  title: Text(title , style: TextStyle(color: mainColor),),
+                                                  content: Text(content),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('Tamam' , style: TextStyle(color: mainColor),),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.white,
@@ -368,54 +387,57 @@ class _MapWidgetState extends State<MapWidget> {
                               ],
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  _launchGoogleMaps(event2.latitude, event2.longitude);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: mainColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 30),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _launchGoogleMaps(event2.latitude, event2.longitude);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: mainColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.map_outlined, color: Colors.white),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Yol Tarifi',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.map_outlined, color: Colors.white),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Yol Tarifi',
-                                      style: TextStyle(color: Colors.white),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _launchURL(event2.url);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: mainColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                  ],
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  _launchURL(event2.url);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: mainColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.airplane_ticket_outlined, color: Colors.white),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Bilet Al',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.airplane_ticket_outlined, color: Colors.white),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Bilet Al',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -429,7 +451,6 @@ class _MapWidgetState extends State<MapWidget> {
         ),
       ));
     }
-
     polylines.add(
       Polyline(
         points: [
@@ -518,7 +539,7 @@ class _MapWidgetState extends State<MapWidget> {
           ),
         ),
         Positioned(
-          bottom: 48.0,
+          bottom: 80.0,
           right: 16.0,
           child: FloatingActionButton(
             backgroundColor: Colors.white,
