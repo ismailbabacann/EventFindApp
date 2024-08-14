@@ -1,4 +1,5 @@
 import 'package:eventfindapp/screens/login_page.dart';
+import 'package:eventfindapp/screens/onboarding_page.dart';
 import 'package:eventfindapp/screens/splash_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
       ),
       home: SplashPage(),
       routes: {
-        '/login': (context) => LoginPage(), // LoginPage rotası
+        '/onboarding': (context) => OnboardingPage(),
+        '/login': (context) => LoginPage(),
       },
     );
   }

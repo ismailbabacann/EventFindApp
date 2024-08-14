@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
+import 'package:eventfindapp/screens/onboarding_page.dart';
 import 'package:eventfindapp/screens/password_change_page.dart';
 import 'package:eventfindapp/screens/savedevents_page.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class CustomDrawer extends StatelessWidget {
             leading:  Icon(Icons.warning_rounded , color: mainColor),
             title: const Text('Kılavuz' ,  style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OnboardingPage()));
             },
           ),
           ListTile(
