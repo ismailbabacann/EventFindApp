@@ -1,4 +1,5 @@
 import 'package:eventfindapp/assets/theme/mycolors.dart';
+import 'package:eventfindapp/screens/feedback_page.dart';
 import 'package:eventfindapp/screens/pro_page.dart';
 import 'package:eventfindapp/services/savedevents_service.dart';
 import 'package:eventfindapp/services/ticketmaster_service.dart';
@@ -514,6 +515,17 @@ class _MapWidgetState extends State<MapWidget> {
             backgroundColor: Colors.white,
             onPressed: _getCurrentLocation,
             child: Icon(Icons.my_location , color: mainColor,),
+          ),
+        ),
+        Positioned(
+          bottom: 48.0,
+          right: 16.0,
+          child: FloatingActionButton(
+            backgroundColor: Colors.white,
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FeedbackPage()));
+            },
+            child: Icon(Icons.warning_rounded , color: mainColor,),
           ),
         ),
       ],

@@ -47,14 +47,7 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading:  Icon(Icons.warning_rounded , color: mainColor,),
-            title: const Text('Destek' ,  style: TextStyle(fontWeight: FontWeight.bold)),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading:  Icon(Icons.warning_rounded , color: mainColor),
+            leading:  Icon(Icons.my_library_books_outlined , color: mainColor),
             title: const Text('Kılavuz' ,  style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => OnboardingPage()));
