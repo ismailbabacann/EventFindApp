@@ -23,7 +23,6 @@ class _MainPageState extends State<MainPage> {
     events2 = await ticketmasterService.getEvents();
     setState(() {});
   }
-
   @override
   void initState() {
     super.initState();

@@ -58,7 +58,7 @@ class _MapWidgetState extends State<MapWidget> {
     // Konuma odaklanma ve yakınlaştırma
     widget.mapController.move(
       LatLng(position.latitude, position.longitude),
-      15.0,  // Zoom seviyesi
+      15.0,
     );
   }
 

@@ -58,7 +58,6 @@ class SavedEventsPage extends StatelessWidget {
                 key: ValueKey(events[index].id),
                 onDismissed: (direction) {
                   _savedEventsService.deleteEvent(events[index].id);
-
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('$name etkinliği silindi'),

@@ -59,7 +59,6 @@ class SavedEventsService {
         await _eventsCollection.doc(user.uid).collection('events').doc(documentId).delete();
       } catch (e) {
         print('Error deleting event: $e');
-        // Handle errors if needed
       }
     } else {
       throw Exception('User not logged in');

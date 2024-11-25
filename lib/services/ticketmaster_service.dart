@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class TicketmasterService {
-  final String _apiKey = 'Al3jtg0xd9ggJ8rwAXPmNbtkPj673JK1';
+  final String _apiKey = 'ORpBH8ClXjAJzs8vTZjXfy3IDCX8wv9x';
 
   Future<List<Event2>> getEvents() async {
     final String url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey=$_apiKey&city=Antalya';
@@ -10,12 +10,20 @@ class TicketmasterService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
-      final List<dynamic> eventsJson = data['_embedded']['events'];
-      return eventsJson.map((json) => Event2.fromJson(json)).toList();
+
+      // Check if _embedded and events exist
+      if (data['_embedded'] != null && data['_embedded']['events'] != null) {
+        final List<dynamic> eventsJson = data['_embedded']['events'];
+        return eventsJson.map((json) => Event2.fromJson(json)).toList();
+      } else {
+        // Handle case where _embedded or events is missing
+        throw Exception('No events found in the API response');
+      }
     } else {
-      throw Exception('Failed to load events');
+      throw Exception('Failed to load events: ${response.statusCode}');
     }
   }
+
 }
 
 class Event2 {
@@ -46,9 +54,9 @@ class Event2 {
   });
 
   factory Event2.fromJson(Map<String, dynamic> json) {
-    var imageUrl = json['images'] != null && json['images'].isNotEmpty
+    var imageUrl = (json['images'] != null && json['images'].isNotEmpty)
         ? json['images'][0]['url']
-        : '';
+        : 'https://via.placeholder.com/150';
 
     var venue = json['_embedded']?['venues'] != null && json['_embedded']['venues'].isNotEmpty
         ? json['_embedded']['venues'][0]
@@ -61,17 +69,18 @@ class Event2 {
       location: venue['name'] ?? 'Unknown Location',
       address: venue['address']?['line1'] ?? 'Antalya, Konyaaltı',
       latitude: location['latitude'] != null
-          ? double.parse(location['latitude'])
+          ? double.tryParse(location['latitude']) ?? 0.0
           : 0.0,
       longitude: location['longitude'] != null
-          ? double.parse(location['longitude'])
+          ? double.tryParse(location['longitude']) ?? 0.0
           : 0.0,
-      type: json['classifications']?[0]['segment']['name'] ?? 'Unknown Type',
-      genre: json['classifications']?[0]['genre']['name'] ?? 'Unknown Genre',
+      type: json['classifications']?[0]['segment']?['name'] ?? 'Unknown Type',
+      genre: json['classifications']?[0]['genre']?['name'] ?? 'Unknown Genre',
       imageUrl: imageUrl,
-      localTime: json['dates']['start']['localTime'] ?? 'Unknown Time',
-      localDate: json['dates']['start']['localDate'] ?? 'Unknown Date',
+      localTime: json['dates']?['start']?['localTime'] ?? 'Unknown Time',
+      localDate: json['dates']?['start']?['localDate'] ?? 'Unknown Date',
       url: venue['url'] ?? 'https://www.biletix.com/search/TURKIYE/tr?category_sb=-1&date_sb=-1&city_sb=Antalya#!city_sb:Antalya',
     );
   }
+
 }

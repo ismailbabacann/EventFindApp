@@ -50,7 +50,6 @@ class ProPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10),
-              // Placeholder for the logo
               Container(
                 height:150,
                 width: 150,

@@ -14,7 +14,7 @@ class PasswordChangePage extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.white, // Geri ok simgesinin rengi
+          color: Colors.white,
         ),
         title: Text(
           'Şifre Değiştir',
