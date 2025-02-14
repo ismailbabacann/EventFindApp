@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class ProPage extends StatelessWidget {
+class ProPage extends StatefulWidget {
+  @override
+  _ProPageState createState() => _ProPageState();
+}
 
+class _ProPageState extends State<ProPage> {
+  int _selectedIndex = 1; // Başlangıçta 6 Aylık paket seçili
 
   void _launchURL(String urlString) async {
     final Uri url = Uri.parse(urlString);
@@ -12,7 +17,6 @@ class ProPage extends StatelessWidget {
       throw 'Could not launch $urlString';
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +55,7 @@ class ProPage extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Container(
-                height:150,
+                height: 150,
                 width: 150,
                 child: SvgPicture.asset('lib/assets/icons/logo_enyakın.svg'),
               ),
@@ -67,17 +71,37 @@ class ProPage extends StatelessWidget {
               SizedBox(height: 5),
               Column(
                 children: [
-                  FeatureTile("Tüm kullanıcılarla bağlantı kur!" ,),
+                  FeatureTile("Tüm kullanıcılarla bağlantı kur!"),
                   FeatureTile("Etkinliğe kimlerin katıldığını görebilme!"),
                   FeatureTile("Premiuma özel etkinliklere katılma şansı!"),
                   FeatureTile("Premium'a özel indirimler ve hediyeler!"),
                 ],
               ),
               SizedBox(height: 10),
-              SubscriptionOptions(),
+              SubscriptionOptions(
+                selectedIndex: _selectedIndex,
+                onOptionSelected: (index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                },
+              ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
+                  String selectedPlan = _selectedIndex == 0
+                      ? "Aylık"
+                      : _selectedIndex == 1
+                      ? "6 Aylık"
+                      : "12 Aylık";
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          "$selectedPlan planı için ödeme işlemi yakında aktif olacak! Premium özellikler çok yakında sizlerle!"),
+                      duration: Duration(seconds: 3),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
                   await launchUrlString('', mode: LaunchMode.externalApplication);
                 },
                 style: ElevatedButton.styleFrom(
@@ -89,7 +113,7 @@ class ProPage extends StatelessWidget {
                 ),
                 child: Text(
                   "Ödeme Yap",
-                  style: TextStyle(fontSize: 18 , color: Colors.white),
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
             ],
@@ -126,64 +150,102 @@ class FeatureTile extends StatelessWidget {
 }
 
 class SubscriptionOptions extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onOptionSelected;
+
+  SubscriptionOptions({required this.selectedIndex, required this.onOptionSelected});
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        SubscriptionOption("Aylık", "₺49,9", "TRY 49/ay"),
-        SubscriptionOption("6 Aylık", "₺239,9", "TRY 39/ay", isHighlighted: true , ),
-        SubscriptionOption("12 Aylık", "₺359,9", "TRY 29/ay"),
+        SubscriptionOption(
+          index: 0,
+          title: "Aylık",
+          price: "₺49,9",
+          subText: "TRY 49/ay",
+          isSelected: selectedIndex == 0,
+          onSelect: onOptionSelected,
+        ),
+        SubscriptionOption(
+          index: 1,
+          title: "6 Aylık",
+          price: "₺239,9",
+          subText: "TRY 39/ay",
+          isSelected: selectedIndex == 1,
+          onSelect: onOptionSelected,
+        ),
+        SubscriptionOption(
+          index: 2,
+          title: "12 Aylık",
+          price: "₺359,9",
+          subText: "TRY 29/ay",
+          isSelected: selectedIndex == 2,
+          onSelect: onOptionSelected,
+        ),
       ],
     );
   }
 }
 
 class SubscriptionOption extends StatelessWidget {
+  final int index;
   final String title;
   final String price;
   final String subText;
-  final bool isHighlighted;
+  final bool isSelected;
+  final Function(int) onSelect;
 
-  SubscriptionOption(this.title, this.price, this.subText, {this.isHighlighted = false});
+  SubscriptionOption({
+    required this.index,
+    required this.title,
+    required this.price,
+    required this.subText,
+    required this.isSelected,
+    required this.onSelect,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: isHighlighted ? mainColor : Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: isHighlighted ? Colors.black : Colors.grey),
-      ),
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: isHighlighted ? Colors.white : Colors.grey,
+    return GestureDetector(
+      onTap: () => onSelect(index),
+      child: Container(
+        padding: EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: isSelected ? mainColor : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: isSelected ? Colors.black : Colors.grey),
+        ),
+        child: Column(
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: isSelected ? Colors.white : Colors.grey,
+              ),
             ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            price,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: isHighlighted ? Colors.white : Colors.black,
+            SizedBox(height: 4),
+            Text(
+              price,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: isSelected ? Colors.white : Colors.black,
+              ),
             ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            subText,
-            style: TextStyle(
-              fontSize: 14,
-              color: isHighlighted ? Colors.white : Colors.black,
+            SizedBox(height: 4),
+            Text(
+              subText,
+              style: TextStyle(
+                fontSize: 14,
+                color: isSelected ? Colors.white : Colors.black,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
