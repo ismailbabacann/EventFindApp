@@ -7,6 +7,7 @@ import 'package:eventfindapp/widgets/map_widget.dart';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:eventfindapp/widgets/city_boundries.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -57,7 +58,11 @@ class _MainPageState extends State<MainPage> {
           children: [
             Positioned.fill(
               child: events2.isNotEmpty
-                  ? MapWidget(events2: events2, mapController: _mapController)
+                  ? MapWidget(
+                events2: events2,
+                mapController: _mapController,
+                boundaries: CityBoundaries.boundaries,
+              )
                   : const Center(child: CircularProgressIndicator()),
             ),
             Positioned(

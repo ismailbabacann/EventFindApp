@@ -15,10 +15,12 @@ import 'package:url_launcher/url_launcher_string.dart';
 class MapWidget extends StatefulWidget {
   final List<Event2> events2;
   final MapController mapController;
+  final Map<String, List<LatLng>> boundaries;
 
   MapWidget({
     required this.mapController,
     required this.events2,
+    required this.boundaries,
     Key? key,
   }) : super(key: key);
 
@@ -457,38 +459,10 @@ class _MapWidgetState extends State<MapWidget> {
     polylines.add(
       Polyline(
         points: [
-          LatLng(36.10574932855204, 32.560054744629205),
-          LatLng(36.46079224539518, 32.605419861394715),
-          LatLng(36.776031713819734, 32.45161126947315),
-          LatLng(36.771631662712146, 32.454357851471755),
-          LatLng(36.94150722996029, 32.1976984775311),
-          LatLng(37.11825742257502, 32.019993877714036),
-          LatLng(37.155415559442076, 32.03553089137189),
-          LatLng(37.246685029913344, 31.92094541275052),
-          LatLng(37.34247635035483, 31.8257811996373),
-          LatLng(37.28068946224021, 31.73255911533516),
-          LatLng(37.41038325814623, 31.685948073184086),
-          LatLng(37.34865224594754, 31.639337031033026),
-          LatLng(37.42118096040576, 31.48785114404205),
-          LatLng(37.52291131036175, 31.45095073567245),
-          LatLng(37.53985290457223, 31.369381411908083),
-          LatLng(37.43660354881416, 31.313059735975543),
-          LatLng(37.34566338125675, 30.97682050415561),
-          LatLng(37.3070541647539, 30.941862222542312),
-          LatLng(37.23750759583961, 30.802029096089097),
-          LatLng(37.251422048064086, 30.50876795424941),
-          LatLng(37.30859891402455, 30.366992694344553),
-          LatLng(37.36418875724471, 30.19608553861317),
-          LatLng(37.29778500067946, 30.116458341605096),
-          LatLng(37.198842859603126, 29.957203947588944),
-          LatLng(37.042435676560565, 29.867866113243924),
-          LatLng(37.042435676560565, 29.867866113243924),
-          LatLng(36.47763687204508, 29.372623786810266),
-          LatLng(36.35416894187218, 29.329896998171787),
-          LatLng(36.29314408579457, 29.256096180716888),
         ],
-        strokeWidth: 2.0,
-        color: Colors.red,
+        strokeWidth: 0.0,
+        color: Colors.redAccent,
+        borderColor: Colors.redAccent,
       ),
     );
 
@@ -510,7 +484,14 @@ class _MapWidgetState extends State<MapWidget> {
               subdomains: ['a', 'b', 'c'],
             ),
             PolylineLayer(
-              polylines: polylines,
+              polylines: widget.boundaries.entries.map((entry) {
+                return Polyline(
+                  points: entry.value,
+                  strokeWidth: 2.0,
+                  color: Colors.redAccent,
+
+                );
+              }).toList(),
             ),
             MarkerLayer(
               markers: markers,
