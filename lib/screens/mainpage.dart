@@ -51,82 +51,85 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        drawer: const CustomDrawer(),
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: events2.isNotEmpty
-                  ? MapWidget(
-                events2: events2,
-                mapController: _mapController,
-                boundaries: CityBoundaries.boundaries,
-              )
-                  : const Center(child: CircularProgressIndicator()),
-            ),
-            Positioned(
-              top: 10.0,
-              left: 10.0,
-              right: 10.0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          color: mainColor,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: IconButton(
-                          icon: const Icon(Icons.menu, color: Colors.white),
-                          onPressed: () {
-                            Scaffold.of(context).openDrawer();
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                  SizedBox(width: 10),
-                  Center(
-                    child: SvgPicture.asset(
-                      'lib/assets/icons/logo_enyakın.svg',
-                      height: 45.0,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  DropdownButton<String>(
-                    value: selectedCity,
-                    items: ["Trabzon", "Sivas", "Ankara", "Antalya"].map((String city) {
-                      return DropdownMenuItem<String>(
-                        value: city,
-                        child: Text(city),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
-                        setState(() {
-                          selectedCity = newValue;
-                        });
-                        loadTicketmasterEvents();
-                      }
-                    },
-                  ),
-                ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+          drawer: const CustomDrawer(),
+          body: Stack(
+            children: [
+              Positioned.fill(
+                child: events2.isNotEmpty
+                    ? MapWidget(
+                  events2: events2,
+                  mapController: _mapController,
+                  boundaries: CityBoundaries.boundaries,
+                )
+                    : const Center(child: CircularProgressIndicator()),
               ),
-            ),
-            Positioned(
-              top: 70,
-              left: 0.0,
-              right: 0.0,
-              child: events2.isNotEmpty
-                  ? CarouselSliderWidget(events: events2)
-                  : const Center(child: CircularProgressIndicator()),
-            ),
-          ],
+              Positioned(
+                top: 10.0,
+                left: 10.0,
+                right: 10.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            color: mainColor,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.menu, color: Colors.white),
+                            onPressed: () {
+                              Scaffold.of(context).openDrawer();
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(width: 10),
+                    Center(
+                      child: SvgPicture.asset(
+                        'lib/assets/icons/logo_enyakın.svg',
+                        height: 45.0,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    DropdownButton<String>(
+                      value: selectedCity,
+                      items: ["Trabzon", "Sivas", "Ankara", "Antalya"].map((String city) {
+                        return DropdownMenuItem<String>(
+                          value: city,
+                          child: Text(city),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            selectedCity = newValue;
+                          });
+                          loadTicketmasterEvents();
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 70,
+                left: 0.0,
+                right: 0.0,
+                child: events2.isNotEmpty
+                    ? CarouselSliderWidget(events: events2)
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ],
+          ),
         ),
       ),
     );
