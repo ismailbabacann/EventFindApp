@@ -6,6 +6,7 @@ import 'package:eventfindapp/widgets/custom_drawer.dart';
 import 'package:eventfindapp/widgets/map_widget.dart';
 import 'package:eventfindapp/assets/theme/mycolors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:latlong2/latlong.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -18,11 +19,29 @@ class _MainPageState extends State<MainPage> {
   final MapController _mapController = MapController();
   List<Event2> events2 = [];
   final TicketmasterService ticketmasterService = TicketmasterService();
+  String selectedCity = "Antalya";
+
+  final Map<String, LatLng> cityLocations = {
+    "Trabzon": LatLng(41.00145, 39.7178),
+    "Sivas": LatLng(39.7477, 37.0179),
+    "Ankara": LatLng(39.9208, 32.8541),
+    "Antalya": LatLng(36.8969, 30.7133),
+  };
 
   void loadTicketmasterEvents() async {
-    events2 = await ticketmasterService.getEvents();
-    setState(() {});
+    List<Event2> newEvents = await ticketmasterService.getEvents(selectedCity);
+    setState(() {
+      events2 = newEvents;
+    });
+    _zoomToSelectedCity();
   }
+
+  void _zoomToSelectedCity() {
+    if (cityLocations.containsKey(selectedCity)) {
+      _mapController.move(cityLocations[selectedCity]!, 12.0);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -66,7 +85,7 @@ class _MainPageState extends State<MainPage> {
                       );
                     },
                   ),
-                  SizedBox(width: 10,),
+                  SizedBox(width: 10),
                   Center(
                     child: SvgPicture.asset(
                       'lib/assets/icons/logo_enyakın.svg',
@@ -74,7 +93,23 @@ class _MainPageState extends State<MainPage> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  const SizedBox(width: 48),
+                  DropdownButton<String>(
+                    value: selectedCity,
+                    items: ["Trabzon", "Sivas", "Ankara", "Antalya"].map((String city) {
+                      return DropdownMenuItem<String>(
+                        value: city,
+                        child: Text(city),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          selectedCity = newValue;
+                        });
+                        loadTicketmasterEvents();
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
