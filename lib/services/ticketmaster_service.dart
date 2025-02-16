@@ -21,7 +21,6 @@ class TicketmasterService {
       throw Exception('Failed to load events: ${response.statusCode}');
     }
   }
-
 }
 
 class Event2 {
@@ -53,7 +52,7 @@ class Event2 {
 
   factory Event2.fromJson(Map<String, dynamic> json) {
     var imageUrl = (json['images'] != null && json['images'].isNotEmpty)
-        ? json['images'][0]['url']
+        ? 'https://images.weserv.nl/?url=${Uri.encodeComponent(json['images'][0]['url'])}'
         : 'https://via.placeholder.com/150';
 
     var venue = json['_embedded']?['venues'] != null && json['_embedded']['venues'].isNotEmpty
@@ -80,5 +79,4 @@ class Event2 {
       url: venue['url'] ?? 'https://www.biletix.com/search/TURKIYE/tr?category_sb=-1&date_sb=-1&city_sb=Antalya#!city_sb:Antalya',
     );
   }
-
 }
