@@ -34,19 +34,22 @@ class _MapWidgetState extends State<MapWidget> {
 
 
   Future<void> _getCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Konum servisleri kapalı, lütfen ayarlardan açın.')),
+      );
+      return;
     }
 
-    permission = await Geolocator.checkPermission();
+    LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
-        return Future.error('Location permissions are denied');
+      if (permission == LocationPermission.deniedForever) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Konum izni reddedildi. Ayarlardan açın.')),
+        );
+        return;
       }
     }
 
@@ -55,12 +58,12 @@ class _MapWidgetState extends State<MapWidget> {
       _currentPosition = position;
     });
 
-    // Konuma odaklanma ve yakınlaştırma
     widget.mapController.move(
       LatLng(position.latitude, position.longitude),
       15.0,
     );
   }
+
 
   void _launchGoogleMaps(double latitude, double longitude) async {
     final url = 'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude';
