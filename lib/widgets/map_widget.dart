@@ -147,6 +147,104 @@ class _MapWidgetState extends State<MapWidget> {
         ),
       ),
     );
+    markers.add(
+      Marker(
+        width: 80.0,
+        height: 80.0,
+        point: LatLng(39.977936, 32.783379),
+        builder: (ctx) => CustomMarker(
+          icon: Icons.workspace_premium,
+          iconColor: Colors.white,
+          iconSize: 20.0,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProPage()));
+          },
+          backgroundSvg: 'lib/assets/icons/iconbackground_cyan.svg',
+        ),
+      ),
+    );
+    markers.add(
+      Marker(
+        width: 80.0,
+        height: 80.0,
+        point: LatLng(39.887912, 32.921457),
+        builder: (ctx) => CustomMarker(
+          icon: Icons.workspace_premium,
+          iconColor: Colors.white,
+          iconSize: 20.0,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProPage()));
+          },
+          backgroundSvg: 'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
+        ),
+      ),
+    );
+    markers.add(
+      Marker(
+        width: 80.0,
+        height: 80.0,
+        point: LatLng(39.932532, 32.837444),
+        builder: (ctx) => CustomMarker(
+          icon: Icons.workspace_premium,
+          iconColor: Colors.white,
+          iconSize: 20.0,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProPage()));
+          },
+          backgroundSvg: 'lib/assets/icons/iconbackground_red.svg',
+        ),
+      ),
+    );
+    markers.add(
+      Marker(
+        width: 80.0,
+        height: 80.0,
+        point: LatLng(39.766261, 37.061131),
+        builder: (ctx) => CustomMarker(
+          icon: Icons.workspace_premium,
+          iconColor: Colors.white,
+          iconSize: 20.0,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProPage()));
+          },
+          backgroundSvg: 'lib/assets/icons/iconbackground_red.svg',
+        ),
+      ),
+    );
+
+    markers.add(
+      Marker(
+        width: 80.0,
+        height: 80.0,
+        point: LatLng(40.953590, 39.933427),
+        builder: (ctx) => CustomMarker(
+          icon: Icons.workspace_premium,
+          iconColor: Colors.white,
+          iconSize: 20.0,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProPage()));
+          },
+          backgroundSvg: 'lib/assets/icons/iconbackground_red.svg',
+        ),
+      ),
+    );
+
+    markers.add(
+      Marker(
+        width: 80.0,
+        height: 80.0,
+        point: LatLng(40.985797, 39.748035),
+        builder: (ctx) => CustomMarker(
+          icon: Icons.workspace_premium,
+          iconColor: Colors.white,
+          iconSize: 20.0,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProPage()));
+          },
+          backgroundSvg: 'lib/assets/icons/iconbackground_purple(8A3AC8).svg',
+        ),
+      ),
+    );
 
     for (var event2 in widget.events2) {
       markers.add(Marker(

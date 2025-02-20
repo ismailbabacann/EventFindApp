@@ -101,6 +101,9 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ),
                     DropdownButton<String>(
+                      style: TextStyle(color: mainColor),
+                      icon: Icon(Icons.location_on , color: mainColor,) ,
+                      dropdownColor: Colors.white,
                       value: selectedCity,
                       items: ["Trabzon", "Sivas", "Ankara", "Antalya"].map((String city) {
                         return DropdownMenuItem<String>(
