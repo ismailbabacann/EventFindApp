@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:eventfindapp/screens/pro_page.dart';
 import 'package:eventfindapp/screens/login_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:eventfindapp/screens/comment_page.dart';
 
 File? _globalImage;
 
@@ -43,7 +44,7 @@ class CustomDrawer extends StatelessWidget {
             leading: Icon(Icons.bookmark, color: mainColor),
             title: Text('Kaydedilen Etkinlikler', style: TextStyle(fontWeight: FontWeight.bold)),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SavedEventsPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => CommentPage(eventName: "aghmet")));
             },
           ),
           ListTile(

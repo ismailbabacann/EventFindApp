@@ -1,4 +1,5 @@
 import 'package:eventfindapp/assets/theme/mycolors.dart';
+import 'package:eventfindapp/screens/comment_page.dart';
 import 'package:eventfindapp/screens/feedback_page.dart';
 import 'package:eventfindapp/screens/pro_page.dart';
 import 'package:eventfindapp/services/savedevents_service.dart';
@@ -11,6 +12,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:eventfindapp/screens/comment_page.dart';
 
 class MapWidget extends StatefulWidget {
   final List<Event2> events2;
@@ -397,6 +399,34 @@ class _MapWidgetState extends State<MapWidget> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CommentPage(eventName: event2.name), // Etkinlik adına göre CommentPage yönlendir
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xFF6B7AED),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.comment, color: Colors.white),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Yorum Yap',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
                                 ElevatedButton(
                                   onPressed: () {
                                     _launchGoogleMaps(event2.latitude, event2.longitude);

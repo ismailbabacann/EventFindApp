@@ -13,13 +13,10 @@ class AuthService {
   Future<void> signInWithGoogle(BuildContext context) async {
     try {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-
-      if (googleUser == null) {
-        return;
-      }
+      if (googleUser == null) return;
 
       final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -27,11 +24,14 @@ class AuthService {
       );
 
       final UserCredential userCredential =
-          await firebaseAuth.signInWithCredential(credential);
+      await firebaseAuth.signInWithCredential(credential);
 
       if (userCredential.user != null) {
+        // Kullanıcı Firestore'da kayıtlı mı kontrol et, yoksa ekle
+        await _registerGoogleUser(userCredential.user!);
+
         Fluttertoast.showToast(
-            msg: "Google ile giriş başarılı! ", toastLength: Toast.LENGTH_LONG);
+            msg: "Google ile giriş başarılı!", toastLength: Toast.LENGTH_LONG);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MainPage()));
       }
@@ -45,17 +45,21 @@ class AuthService {
 
   Future<void> signUp(BuildContext context,
       {required String name,
-      required String surname,
-      required String email,
-      required String password}) async {
+        required String surname,
+        required String email,
+        required String password}) async {
     try {
       final UserCredential userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
+
       if (userCredential.user != null) {
         await _registerUser(
-            name: name, surname: surname, email: email, password: password);
+            uid: userCredential.user!.uid, // UID ile kayıt
+            name: name,
+            surname: surname,
+            email: email);
         Fluttertoast.showToast(
-            msg: "BAŞARIYLA KAYIT YAPTINIZ! ", toastLength: Toast.LENGTH_LONG);
+            msg: "BAŞARIYLA KAYIT YAPTINIZ!", toastLength: Toast.LENGTH_LONG);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MainPage()));
       }
@@ -71,7 +75,7 @@ class AuthService {
           .signInWithEmailAndPassword(email: email, password: password);
       if (userCredential.user != null) {
         Fluttertoast.showToast(
-            msg: "BAŞARIYLA GİRİŞ YAPTINIZ! ", toastLength: Toast.LENGTH_LONG);
+            msg: "BAŞARIYLA GİRİŞ YAPTINIZ!", toastLength: Toast.LENGTH_LONG);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MainPage()));
       }
@@ -80,18 +84,30 @@ class AuthService {
     }
   }
 
+  // Kullanıcıları UID ile kaydet
   Future<void> _registerUser(
-      {required String name,
-      required String surname,
-      required String email,
-      required String password}) async {
-    await userCollection.doc().set({
-      "email": email,
+      {required String uid,
+        required String name,
+        required String surname,
+        required String email}) async {
+    await userCollection.doc(uid).set({ // UID ile kaydediyoruz!
       "name": name,
       "surname": surname,
-      "password": password,
+      "email": email,
     });
   }
+
+  // Google ile giriş yapan kullanıcıyı kaydet
+  Future<void> _registerGoogleUser(User user) async {
+    final userDoc = await userCollection.doc(user.uid).get();
+    if (!userDoc.exists) {
+      await userCollection.doc(user.uid).set({
+        "name": user.displayName ?? "Google Kullanıcısı",
+        "email": user.email,
+      });
+    }
+  }
+
 
   Future<void> changePassword({
     required String oldPassword,
@@ -108,14 +124,15 @@ class AuthService {
     }
 
     try {
-      // Şu anda giriş yapmış kullanıcının şifresini değiştirmek için önce mevcut şifreyi doğrulamamız gerekiyor
+      // Kullanıcıyı eski şifresi ile doğrula
       final credentials = EmailAuthProvider.credential(
         email: user.email!,
         password: oldPassword,
       );
 
-      await user.reauthenticateWithCredential(credentials);
-      await user.updatePassword(newPassword);
+      await user.reauthenticateWithCredential(credentials); // Kimlik doğrulama
+      await user.updatePassword(newPassword); // Şifreyi güncelle
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Şifre başarıyla değiştirildi.')),
       );
@@ -125,4 +142,5 @@ class AuthService {
       );
     }
   }
+
 }
