@@ -1,3 +1,4 @@
+import 'package:eventfindapp/services/eventnotification_service.dart';
 import 'package:eventfindapp/widgets/ratingcard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -47,6 +48,8 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     loadTicketmasterEvents();
+    print("✅ MainPage açıldı, bildirimler tekrar kontrol ediliyor...");
+    EventNotificationService.checkAndScheduleNotifications();
   }
 
   @override
