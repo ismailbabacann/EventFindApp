@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SplashPage(), // SplashPage ile başlat
+      home: SplashPage(),
       routes: {
         '/onboarding': (context) => OnboardingPage(),
         '/login': (context) => LoginPage(),

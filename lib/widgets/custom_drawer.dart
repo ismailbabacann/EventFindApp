@@ -4,6 +4,7 @@ import 'package:eventfindapp/screens/feedback_page.dart';
 import 'package:eventfindapp/screens/onboarding_page.dart'; // ✅ OnboardingPage import edildi
 import 'package:eventfindapp/screens/password_change_page.dart';
 import 'package:eventfindapp/screens/savedevents_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:eventfindapp/screens/pro_page.dart';
 import 'package:eventfindapp/screens/login_page.dart';
@@ -74,11 +75,20 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app, color: mainColor),
-            title: const Text('Çıkış Yap', style: TextStyle(fontWeight: FontWeight.bold)),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+            title: const Text(
+              'Çıkış Yap',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            onTap: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+                    (route) => false,
+              );
             },
           ),
+
           ListTile(
             leading: SvgPicture.asset('lib/assets/icons/pro.svg'),
             onTap: () {
